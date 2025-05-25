@@ -62,13 +62,13 @@ export function Navbar() {
     <>
       <header
         className={cn(
-          "fixed top-0 left-0 right-0 z-[40] transition-all duration-500 bg-background/80 backdrop-blur-xl",
-          isScrolled && !isMobileMenuOpen ? "-translate-y-full" : "translate-y-0",
+          "fixed top-0 left-0 right-0 z-[40] transition-all duration-500 bg-background/70 navigation-bar-backdrop-filter",
+          // isScrolled && !isMobileMenuOpen ? "-translate-y-full" : "translate-y-0",
           isScrolled ? "shadow-sm" : ""
         )}
       >
-        <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between h-16 md:h-20">
+        <div className="container mx-auto px-4 pt-1">
+          <div className="flex items-center justify-between h-12 md:h-14">
             <Link href="/" className="flex items-center space-x-2.5 select-none">
               <div className="relative w-8 h-8 overflow-hidden rounded-full">
                 <Image
@@ -128,11 +128,11 @@ export function Navbar() {
       {/* Mobile Navigation Menu */}
       <div
         className={cn(
-          "fixed inset-0 z-[30] bg-background/80 backdrop-blur-xl transition-transform duration-500 md:hidden",
+          "fixed inset-0 z-[30] bg-background/70 backdrop-blur-xl transition-transform duration-500 md:hidden",
           isMobileMenuOpen ? "translate-y-0" : "-translate-y-full"
         )}
       >
-        <div className="h-full pt-24 overflow-auto flex flex-col">
+        <div className="h-full pt-20 overflow-auto flex flex-col">
           <div className="container mx-auto px-4 flex-1">
             <div className="space-y-6">
               {navLinks.map((link) => (
