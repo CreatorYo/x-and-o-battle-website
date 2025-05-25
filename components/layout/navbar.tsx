@@ -36,29 +36,15 @@ export function Navbar() {
 
     // Control body scroll
     if (isMobileMenuOpen) {
-      document.documentElement.style.overflow = 'hidden';
       document.body.style.overflow = 'hidden';
-      document.body.style.position = 'fixed';
-      document.body.style.width = '100%';
-      document.body.style.top = `-${window.scrollY}px`;
     } else {
-      const scrollY = document.body.style.top;
-      document.documentElement.style.overflow = '';
       document.body.style.overflow = '';
-      document.body.style.position = '';
-      document.body.style.width = '';
-      document.body.style.top = '';
-      window.scrollTo(0, parseInt(scrollY || '0') * -1);
     }
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
       document.removeEventListener("keydown", handleEsc);
-      document.documentElement.style.overflow = '';
       document.body.style.overflow = '';
-      document.body.style.position = '';
-      document.body.style.width = '';
-      document.body.style.top = '';
     };
   }, [isMobileMenuOpen]);
 
@@ -77,7 +63,7 @@ export function Navbar() {
     <>
       <header
         className={cn(
-          "navbar fixed top-0 left-0 right-0 z-[40] transition-transform duration-300 bg-background/90 backdrop-blur-md border-b border-border/50",
+          "navbar fixed top-0 left-0 right-0 z-[40] transition-all duration-300 bg-background/90 backdrop-blur-md border-b border-border/50",
           isScrolled && !isMobileMenuOpen ? "-translate-y-full" : "translate-y-0"
         )}
       >
@@ -139,12 +125,12 @@ export function Navbar() {
       {/* Mobile Navigation Menu */}
       <div
         className={cn(
-          "fixed inset-0 z-[30] bg-background transition-transform duration-300 md:hidden pt-20",
+          "fixed inset-0 z-[30] bg-background transition-transform duration-300 md:hidden",
           isMobileMenuOpen ? "translate-y-0" : "-translate-y-full"
         )}
       >
-        <div className="container mx-auto px-4 py-8 flex flex-col h-full">
-          <div className="flex-1">
+        <div className="h-full flex flex-col">
+          <div className="container mx-auto px-4 flex-1 pt-28">
             {navLinks.map((link) => (
               <Link
                 key={link.name}
@@ -155,27 +141,31 @@ export function Navbar() {
                 {link.name}
               </Link>
             ))}
-            <Link 
-              href="https://apps.apple.com/us/app/x-o-battle/id6745736399"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="select-none"
-            >
-              <Button className="w-full rounded-full bg-black dark:bg-white text-white dark:text-black hover:bg-black/90 dark:hover:bg-white/90">
-                <Apple className="mr-2 h-4 w-4" /> Download
-              </Button>
-            </Link>
+            <div className="mb-8">
+              <Link 
+                href="https://apps.apple.com/us/app/x-o-battle/id6745736399"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="select-none"
+              >
+                <Button className="w-full rounded-full bg-black dark:bg-white text-white dark:text-black hover:bg-black/90 dark:hover:bg-white/90">
+                  <Apple className="mr-2 h-4 w-4" /> Download
+                </Button>
+              </Link>
+            </div>
           </div>
           
           {/* Bottom Actions */}
-          <div className="flex items-center justify-end gap-4 pt-8 border-t border-border/2 dark:border-border/[0.6]">
-            <ThemeSwitcher />
-            <a 
-              href="mailto:help@creatoryogames.com"
-              className="select-none text-foreground/60 hover:text-foreground transition-colors"
-            >
-              <Mail className="h-5 w-5" />
-            </a>
+          <div className="container mx-auto px-4 py-8 border-t border-border/2 dark:border-border/[0.6]">
+            <div className="flex items-center justify-end gap-4">
+              <ThemeSwitcher />
+              <a title="Email Support"
+                href="mailto:help@creatoryogames.com"
+                className="select-none text-foreground/60 hover:text-foreground transition-colors"
+              >
+                <Mail className="h-5 w-5" />
+              </a>
+            </div>
           </div>
         </div>
       </div>

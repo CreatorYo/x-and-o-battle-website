@@ -42,7 +42,7 @@ export function Footer() {
             <p className="text-foreground/60 text-sm">© {new Date().getFullYear()} X&O Battle. All rights reserved.</p>
             <div className="flex items-center gap-4">
               <ThemeSwitcher />
-              <a 
+              <a title="Email Support"
                 href="mailto:help@creatoryogames.com"
                 className="select-none text-foreground/60 hover:text-foreground transition-colors"
               >
