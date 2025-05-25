@@ -8,7 +8,7 @@ const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'X&O Battle',
-  description: 'Experience X&O Battle, a beautifully designed strategic Tic-Tac-Toe game with customizable themes, multiplayer capabilities, and more.',
+  description: 'X&O Battle is a sleek take on tic-tac-toe with customisability and more.',
   icons: {
     icon: 'https://i.imgur.com/OhocUfk.png',
     apple: 'https://i.imgur.com/OhocUfk.png',
