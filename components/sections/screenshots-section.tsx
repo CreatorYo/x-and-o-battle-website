@@ -161,7 +161,6 @@ export function ScreenshotsSection() {
             filter: "none",
             color: "#fff",
             backgroundColor: "transparent",
-            "&:hover": { backgroundColor: "rgba(255, 255, 255, 0.1)" }
           },
           navigationPrev: {
             left: "max(20px, env(safe-area-inset-left))",
@@ -175,9 +174,6 @@ export function ScreenshotsSection() {
           },
           slide: {
             cursor: "grab",
-            "&:active": {
-              cursor: "grabbing"
-            }
           }
         }}
         carousel={{
