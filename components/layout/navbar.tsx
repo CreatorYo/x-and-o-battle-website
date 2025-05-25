@@ -19,7 +19,7 @@ export function Navbar() {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
       
-      if (Math.abs(currentScrollY - lastScrollY) > threshold) {
+      if (Math.abs(currentScrollY - lastScrollY) > threshold && !isMobileMenuOpen) {
         setIsScrolled(currentScrollY > lastScrollY && currentScrollY > 50);
         lastScrollY = currentScrollY;
       }
@@ -64,6 +64,7 @@ export function Navbar() {
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
+    setIsScrolled(false);
   };
 
   const navLinks = [
@@ -76,8 +77,8 @@ export function Navbar() {
     <>
       <header
         className={cn(
-          "navbar fixed top-0 left-0 right-0 z-[40] transition-transform duration-300 bg-background/90 backdrop-blur-md border-b border-border/50",
-          isScrolled ? "-translate-y-full" : "translate-y-0"
+          "navbar fixed top-0 left-0 right-0 z-[100] transition-transform duration-300 bg-background/90 backdrop-blur-md border-b border-border/50",
+          isScrolled && !isMobileMenuOpen ? "-translate-y-full" : "translate-y-0"
         )}
       >
         <div className="container mx-auto px-4 py-4">
@@ -138,7 +139,7 @@ export function Navbar() {
       {/* Mobile Navigation Menu */}
       <div
         className={cn(
-          "fixed inset-0 z-[40] bg-background transition-transform duration-300 md:hidden pt-20",
+          "fixed inset-0 z-[90] bg-background transition-transform duration-300 md:hidden pt-20",
           isMobileMenuOpen ? "translate-y-0" : "-translate-y-full"
         )}
       >
