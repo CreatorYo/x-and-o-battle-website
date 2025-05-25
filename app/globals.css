@@ -1,0 +1,145 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background-rgb: 255, 255, 255;
+  --foreground-rgb: 0, 0, 0;
+  --background: 0 0% 100%;
+  --foreground: 0 0% 0%;
+  --card: 0 0% 100%;
+  --card-foreground: 0 0% 0%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 0 0% 0%;
+  --primary: 213 100% 50%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 0 0% 96%;
+  --secondary-foreground: 0 0% 0%;
+  --muted: 0 0% 96%;
+  --muted-foreground: 0 0% 45%;
+  --accent: 0 0% 96%;
+  --accent-foreground: 0 0% 0%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 0 0% 90%;
+  --input: 0 0% 90%;
+  --ring: 213 100% 50%;
+}
+
+.dark {
+  --background-rgb: 0, 0, 0;
+  --foreground-rgb: 255, 255, 255;
+  --background: 0 0% 0%;
+  --foreground: 0 0% 100%;
+  --card: 0 0% 0%;
+  --card-foreground: 0 0% 100%;
+  --popover: 0 0% 0%;
+  --popover-foreground: 0 0% 100%;
+  --primary: 213 100% 50%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 0 0% 10%;
+  --secondary-foreground: 0 0% 100%;
+  --muted: 0 0% 10%;
+  --muted-foreground: 0 0% 63.9%;
+  --accent: 0 0% 10%;
+  --accent-foreground: 0 0% 100%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 0 0% 20%;
+  --input: 0 0% 20%;
+  --ring: 213 100% 50%;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  /* Disable selection for buttons and images */
+  button, img {
+    @apply select-none;
+  }
+
+  /* Text selection styles */
+  ::selection {
+    background-color: #222222;
+    color: white;
+  }
+  ::-moz-selection {
+    background-color: #222222;
+    color: white;
+  }
+
+  .light ::selection {
+    background-color: #e5e5e5;
+    color: black;
+  }
+  .light ::-moz-selection {
+    background-color: #e5e5e5;
+    color: black;
+  }
+}
+
+@layer components {
+  .nav-link {
+    @apply relative text-sm font-medium transition-colors hover:text-foreground;
+  }
+  
+  .nav-link::after {
+    @apply content-[''] absolute left-0 -bottom-1 h-[2px] w-0 bg-primary transition-all duration-300;
+  }
+  
+  .nav-link:hover::after {
+    @apply w-full;
+  }
+
+  .mobile-nav-link {
+    @apply text-sm font-medium transition-colors hover:text-foreground;
+  }
+
+  /* Feature card selection styles */
+  .feature-rose ::selection {
+    @apply bg-rose-500/30 text-foreground;
+  }
+  
+  .feature-blue ::selection {
+    @apply bg-blue-500/30 text-foreground;
+  }
+  
+  .feature-yellow ::selection {
+    @apply bg-yellow-500/30 text-foreground;
+  }
+  
+  .feature-green ::selection {
+    @apply bg-green-500/30 text-foreground;
+  }
+  
+  .feature-purple ::selection {
+    @apply bg-purple-500/30 text-foreground;
+  }
+  
+  .feature-orange ::selection {
+    @apply bg-orange-500/30 text-foreground;
+  }
+}
+
+/* Custom scrollbar styles */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-background;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-secondary;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-muted;
+}
