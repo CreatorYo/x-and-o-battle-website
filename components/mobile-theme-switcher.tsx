@@ -11,13 +11,21 @@ import {
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 
-export function ThemeSwitcher() {
-  const { setTheme, theme, resolvedTheme } = useTheme();
+export function MobileThemeSwitcher() {
+  const { setTheme, theme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     setMounted(true);
-  }, []);
+
+    const handleScroll = () => {
+      if (open) setOpen(false);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [open]);
 
   if (!mounted) {
     return (
@@ -32,7 +40,7 @@ export function ThemeSwitcher() {
   }
 
   return (
-    <DropdownMenu>
+    <DropdownMenu open={open} onOpenChange={setOpen} modal={false}>
       <DropdownMenuTrigger asChild>
         <Button 
           variant="ghost" 
@@ -49,7 +57,10 @@ export function ThemeSwitcher() {
           )}
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="bg-white dark:bg-[#111] border-gray-200 dark:border-[#222]">
+      <DropdownMenuContent 
+        align="start"
+        className="w-32 bg-white dark:bg-[#111] border-gray-200 dark:border-[#222]"
+      >
         <DropdownMenuItem onClick={() => setTheme("system")} className="hover:bg-gray-100 focus:bg-gray-100 dark:hover:bg-[#222] dark:focus:bg-[#222] flex items-center justify-between">
           <div className="flex items-center">
             <Laptop className="mr-2 h-4 w-4" />

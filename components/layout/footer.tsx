@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Mail } from "lucide-react";
-import { ThemeSwitcher } from "@/components/theme-switcher";
+import { FooterThemeSwitcher } from "@/components/footer-theme-switcher";
 
 export function Footer() {
   return (
@@ -41,7 +41,7 @@ export function Footer() {
           <div className="flex justify-between items-center pt-8 border-t border-foreground/10">
             <p className="text-foreground/60 text-sm">© {new Date().getFullYear()} X&O Battle. All rights reserved.</p>
             <div className="flex items-center gap-4">
-              <ThemeSwitcher />
+              <FooterThemeSwitcher />
               <a title="Email Support"
                 href="mailto:help@creatoryogames.com"
                 className="select-none text-foreground/60 hover:text-foreground transition-colors"
