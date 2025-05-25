@@ -24,6 +24,7 @@
   --border: 0 0% 90%;
   --input: 0 0% 90%;
   --ring: 213 100% 50%;
+  --scrollbar-color-bg: 0, 0%, 84%;
 }
 
 .dark {
@@ -48,11 +49,17 @@
   --border: 0 0% 20%;
   --input: 0 0% 20%;
   --ring: 213 100% 50%;
+  --scrollbar-color-bg: 0 0% 10%;
 }
 
 .navigation-bar-backdrop-filter {
   backdrop-filter: blur(7px) saturate(180%) brightness(150%);
   -webkit-backdrop-filter: blur(7px) saturate(180%) brightness(150%);
+}
+
+.light .navigation-bar-backdrop-filter {
+  backdrop-filter: blur(7px) saturate(180%) brightness(100%);
+  -webkit-backdrop-filter: blur(7px) saturate(180%) brightness(100%);
 }
 
 ::-webkit-scrollbar {
@@ -65,7 +72,7 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: hsl(var(--secondary));
+  background: hsl(var(--scrollbar-color-bg));
   border-radius: 5px;
 }
 
