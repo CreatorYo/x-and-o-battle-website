@@ -25,10 +25,6 @@ export default function NotFound() {
   const escHeld = useRef(false)
 
   useEffect(() => {
-    document.title = "X&O Battle: Page not found"
-  }, [])
-
-  useEffect(() => {
     setDisableSpotlight(isNonComputerDevice())
     const onResize = () => {
       setDisableSpotlight(isNonComputerDevice())
