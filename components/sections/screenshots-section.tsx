@@ -13,15 +13,15 @@ import "yet-another-react-lightbox/styles.css";
 
 const screenshots = [
   {
-    src: "https://assets.creatoryogames.com/Images/X&O_Battle_Game_Screenshot_1.webp",
+    src: "https://i.postimg.cc/GmnYfSKR/X-O-Battle-Game-Screenshot-1.png",
     alt: "Game screenshot showing the board",
   },
   {
-    src: "https://assets.creatoryogames.com/Images/X&O_Battle_Game_Screenshot_2.webp",
+    src: "https://i.postimg.cc/Hk0514vy/X-O-Battle-Game-Screenshot-2.png",
     alt: "Game screenshot showing switch game mode menu",
   },
   {
-    src: "https://assets.creatoryogames.com/Images/X&O_Battle_Game_Screenshot_3.webp",
+    src: "https://i.postimg.cc/3x8K8Y5D/X-O-Battle-Game-Screenshot-3.png",
     alt: "Game screenshot showing settings menu",
   },
 ];
