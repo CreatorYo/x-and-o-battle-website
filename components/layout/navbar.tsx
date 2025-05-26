@@ -53,7 +53,7 @@ export function Navbar() {
   };
 
   const navLinks = [
-    { name: "Home", href: "#" },
+    { name: "Home", href: "/" },
     { name: "Features", href: "#features" },
     { name: "Screenshots", href: "#screenshots" },
   ];
