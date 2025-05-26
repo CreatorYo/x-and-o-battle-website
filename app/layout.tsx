@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   title: 'X&O Battle',
   description: 'X&O Battle is a sleek take on tic-tac-toe with customisability and more.',
   icons: {
-    icon: 'https://i.post2img.cc/NfHmpw1b/X-O-Battle-Logo.png',
+    icon: 'https://i.postimg.cc/NfHmpw1b/X-O-Battle-Logo.png',
     apple: 'https://i.postimg.cc/NfHmpw1b/X-O-Battle-Logo.png',
   },
 };
