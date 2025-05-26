@@ -10,8 +10,8 @@ export const metadata: Metadata = {
   title: 'X&O Battle',
   description: 'X&O Battle is a sleek take on tic-tac-toe with customisability and more.',
   icons: {
-    icon: 'https://i.imgur.com/OhocUfk.png',
-    apple: 'https://i.imgur.com/OhocUfk.png',
+    icon: 'https://assets.creatoryogames.com/Images/X&O_Battle_Logo.webp',
+    apple: 'https://assets.creatoryogames.com/Images/X&O_Battle_Logo.webp',
   },
 };
 
@@ -23,8 +23,8 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <link rel="icon" href="https://i.imgur.com/OhocUfk.png" />
-        <link rel="apple-touch-icon" href="https://i.imgur.com/OhocUfk.png" />
+        <link rel="icon" href="https://assets.creatoryogames.com/Images/X&O_Battle_Logo.webp" />
+        <link rel="apple-touch-icon" href="https://assets.creatoryogames.com/Images/X&O_Battle_Logo.webp" />
         <script
           dangerouslySetInnerHTML={{
             __html: `

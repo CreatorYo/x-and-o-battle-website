@@ -13,16 +13,16 @@ import "yet-another-react-lightbox/styles.css";
 
 const screenshots = [
   {
-    src: "https://i.imgur.com/klaig3F_d.webp?maxwidth=760&fidelity=grand",
-    alt: "Game screenshot showing the main menu",
+    src: "https://assets.creatoryogames.com/Images/X&O_Battle_Game_Screenshot_1.webp",
+    alt: "Game screenshot showing the board",
   },
   {
-    src: "https://i.imgur.com/e1zm9BP.png",
-    alt: "Game screenshot showing a match in progress",
+    src: "https://assets.creatoryogames.com/Images/X&O_Battle_Game_Screenshot_2.webp",
+    alt: "Game screenshot showing switch game mode menu",
   },
   {
-    src: "https://i.imgur.com/P7lFAgh.png",
-    alt: "Game screenshot showing theme selection",
+    src: "https://assets.creatoryogames.com/Images/X&O_Battle_Game_Screenshot_3.webp",
+    alt: "Game screenshot showing settings menu",
   },
 ];
 
