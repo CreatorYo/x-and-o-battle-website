@@ -4,7 +4,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Lightbox from "yet-another-react-lightbox";
@@ -13,15 +13,15 @@ import "yet-another-react-lightbox/styles.css";
 
 const screenshots = [
   {
-    src: "https://i.postimg.cc/GmnYfSKR/X-O-Battle-Game-Screenshot-1.png",
+    src: "https://i.imgur.com/q3Qe7Y8.png",
     alt: "Game screenshot showing the board",
   },
   {
-    src: "https://i.postimg.cc/Hk0514vy/X-O-Battle-Game-Screenshot-2.png",
+    src: "https://i.imgur.com/WdTmjsm.png",
     alt: "Game screenshot showing switch game mode menu",
   },
   {
-    src: "https://i.postimg.cc/3x8K8Y5D/X-O-Battle-Game-Screenshot-3.png",
+    src: "https://i.imgur.com/STAh2Mk.png",
     alt: "Game screenshot showing settings menu",
   },
 ];
@@ -185,6 +185,7 @@ export function ScreenshotsSection() {
           iconPrev: () => <ChevronLeft className="w-6 h-6" />,
           iconZoomIn: () => null,
           iconZoomOut: () => null,
+          iconClose: () => <X className="w-5 h-5" />,
         }}
       />
     </section>

@@ -72,11 +72,11 @@ export function Navbar() {
             <Link href="/" className="flex items-center space-x-2.5 select-none">
               <div className="relative w-8 h-8 overflow-hidden rounded-full">
                 <Image
-                  src="https://i.postimg.cc/NfHmpw1b/X-O-Battle-Logo.png"
+                  src="https://i.imgur.com/Hsi3uwx.png"
                   alt="X&O Battle Logo"
                   fill
                   draggable="false"
-                  className="object-cover"
+                  className="object-cover pointer-events-none"
                 />
               </div>
               <span className="font-semibold text-lg">X&O Battle</span>
