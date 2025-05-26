@@ -63,7 +63,7 @@ export function FAQSection() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
               viewport={{ once: true }}
-              className="border-b border-border/40"
+              className={`border-border/40 border-b ${index === faqs.length - 1 ? 'border-b-0' : ''}`}
             >
               <div className="py-6">
                 <button
@@ -83,7 +83,7 @@ export function FAQSection() {
                       initial={{ height: 0, opacity: 0 }}
                       animate={{ height: "auto", opacity: 1 }}
                       exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.3 }}
+                      transition={{ duration: 0.2 }}
                       className="overflow-hidden"
                     >
                       <p className="mt-4 text-muted-foreground pr-8">
