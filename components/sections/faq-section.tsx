@@ -24,7 +24,7 @@ const faqs = [
   },
   {
     question: "How is my privacy protected?",
-    answer: <>We take privacy seriously. The game contains no advertisements and does not track or sell your data. <Link href="https://policies.creatoryogames.com/x-and-o-battle-policies-game/privacy-policy" className="text-blue-700 dark:text-blue-300 hover:underline" target="_blank" rel="noopener noreferrer">Learn more</Link></>
+    answer: <>We take your privacy seriously. The game contains no advertisements and does not track or sell your data. <Link href="https://policies.creatoryogames.com/x-and-o-battle-policies-game/privacy-policy" className="text-blue-700 dark:text-blue-300 hover:underline" target="_blank" rel="noopener noreferrer">Learn more</Link></>
   }
 ];
 
