@@ -177,12 +177,12 @@ export default function NotFound() {
       <main
         onMouseMove={onMouseMove}
         onMouseLeave={onMouseLeave}
-        className={`relative grid min-h-screen place-items-center px-6 py-16 overflow-hidden ${isDarkMode ? "bg-black" : "bg-white"}`}
+        className="relative grid min-h-screen place-items-center bg-background px-6 py-16 overflow-hidden"
       >
         <div className="relative z-10 text-center max-w-md px-4">
           <p className="text-blue-500 text-base font-semibold mb-4 select-none">404</p>
           <h1
-            className={`tracking-tight mb-4 overflow-hidden ${isDarkMode ? "text-white" : "text-black"} text-6xl font-bold sm:text-7xl md:text-8xl lg:text-7xl`}
+           className="text-6xl sm:text-7xl md:text-8xl lg:text-7xl font-bold tracking-tight text-foreground mb-4 overflow-hidden"
           >
             Not found
           </h1>
