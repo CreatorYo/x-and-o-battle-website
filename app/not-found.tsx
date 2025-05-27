@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react"
 import Link from "next/link"
+import { ChevronRight } from "lucide-react"
 import { Navbar } from "@/components/layout/navbar"
 import { Footer } from "@/components/layout/footer"
 
@@ -176,26 +177,24 @@ export default function NotFound() {
       <main
         onMouseMove={onMouseMove}
         onMouseLeave={onMouseLeave}
-        className="relative grid min-h-screen place-items-center bg-background px-6 py-16 overflow-hidden"
+        className={`relative grid min-h-screen place-items-center px-6 py-16 overflow-hidden ${isDarkMode ? "bg-black" : "bg-white"}`}
       >
         <div className="relative z-10 text-center max-w-md px-4">
-          <p className="text-blue-400 text-base font-semibold mb-4 select-none">404</p>
-            <h1
-            style={{ lineHeight: "1.2" }}
-            className="text-5xl font-bold tracking-tight text-foreground mb-4 overflow-hiddens"
-            >
-            Page Not Found
-            </h1>
-            <p className="text-muted-foreground mb-8">
-              The page you are looking for does not exist.
+          <p className={`text-${isDarkMode ? "gray-400" : "gray-600"} text-base font-semibold mb-4 select-none`}>404</p>
+          <h1
+            className={`tracking-tight mb-4 overflow-hidden ${isDarkMode ? "text-white" : "text-black"} text-6xl font-bold sm:text-7xl md:text-8xl lg:text-7xl`}
+          >
+            Not found
+          </h1>
+          <p className="text-muted-foreground mb-8">
+            The page you are looking for does not exist.
             </p>
-
           <div className="flex justify-center">
             <Link
               href="/"
-              className="bg-[#0073ff] hover:bg-[#005fd1] text-white font-semibold py-3 px-8 rounded-full transition-all duration-200 select-none"
+              className={`bg-${isDarkMode ? "gray-200" : "bg-transparent"} hover:bg-${isDarkMode ? "gray-300" : "gray-300"} text-${isDarkMode ? "gray-800" : "gray-900"} font-semibold py-2 px-6 rounded-full transition-all duration-200 flex items-center gap-2 select-none border border-${isDarkMode ? "gray-300" : "gray-300"}`}
             >
-              Go Back Home
+              Go to homepage <ChevronRight size={16} />
             </Link>
           </div>
         </div>
