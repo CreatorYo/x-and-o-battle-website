@@ -180,7 +180,7 @@ export default function NotFound() {
         className={`relative grid min-h-screen place-items-center px-6 py-16 overflow-hidden ${isDarkMode ? "bg-black" : "bg-white"}`}
       >
         <div className="relative z-10 text-center max-w-md px-4">
-          <p className={`text-${isDarkMode ? "gray-400" : "gray-600"} text-base font-semibold mb-4 select-none`}>404</p>
+          <p className="text-blue-500 text-base font-semibold mb-4 select-none">404</p>
           <h1
             className={`tracking-tight mb-4 overflow-hidden ${isDarkMode ? "text-white" : "text-black"} text-6xl font-bold sm:text-7xl md:text-8xl lg:text-7xl`}
           >
@@ -189,15 +189,15 @@ export default function NotFound() {
           <p className="text-muted-foreground mb-8">
             The page you are looking for does not exist.
             </p>
-          <div className="flex justify-center">
-            <Link
-              href="/"
-              className={`bg-${isDarkMode ? "gray-200" : "bg-transparent"} hover:bg-${isDarkMode ? "gray-300" : "gray-300"} text-${isDarkMode ? "gray-800" : "gray-900"} font-semibold py-2 px-6 rounded-full transition-all duration-200 flex items-center gap-2 select-none border border-${isDarkMode ? "gray-300" : "gray-300"}`}
-            >
-              Go to homepage <ChevronRight size={16} />
-            </Link>
-          </div>
+        <div className="flex justify-center">
+       <Link
+        href="/"
+        className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-full transition-all duration-200 flex items-center gap-2 select-none"
+        >
+          Go to homepage <ChevronRight size={16} />
+         </Link>
         </div>
+      </div>
 
         {isDarkMode && overlayVisible && spotlight && (
           <div
