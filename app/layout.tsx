@@ -27,6 +27,7 @@ export default function RootLayout({
         <link rel="icon" href="https://i.imgur.com/Hsi3uwx.png" />
         <link rel="apple-touch-icon" href="https://i.imgur.com/Hsi3uwx.png" />
         <meta name="keywords" content="Tic Tac Toe, X&O Battle, X and O Battle, 2 Player Game" />
+        <meta name="apple-itunes-app" content="app-id=id6745736399"/>
         <script
           dangerouslySetInnerHTML={{
             __html: `
