@@ -9,7 +9,6 @@ export function Footer() {
     <footer className="bg-background py-16">
       <div className="container mx-auto px-4">
         <div className="max-w-6xl mx-auto">
-          {/* Navigation */}
           <div className="flex flex-wrap gap-6 justify-center mb-16">
             <Link 
               href="#features" 
@@ -37,7 +36,6 @@ export function Footer() {
             </Link>
           </div>
 
-          {/* Copyright and Actions */}
           <div className="flex justify-between items-center pt-8 border-t border-foreground/10">
             <p className="text-foreground/60 text-sm">© {new Date().getFullYear()} X&O Battle. All rights reserved.</p>
             <div className="flex items-center gap-4">

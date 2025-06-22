@@ -88,12 +88,10 @@
     @apply bg-background text-foreground;
   }
 
-  /* Disable selection for buttons and images */
   button, img {
     @apply select-none;
   }
 
-  /* Text selection styles */
   ::selection {
     background-color: #222222;
     color: white;
@@ -130,7 +128,6 @@
     @apply text-sm font-medium transition-colors hover:text-foreground;
   }
 
-  /* Feature card selection styles */
   .feature-rose ::selection {
     @apply bg-rose-500/30 text-foreground;
   }

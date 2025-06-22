@@ -24,7 +24,6 @@ export function HeroSection() {
 
   return (
     <section className="relative min-h-screen flex items-center justify-center pt-24 md:pt-32 pb-16 md:pb-24 overflow-hidden bg-background">
-      {/* Dotted Pattern */}
       <div 
         className="absolute inset-0 pointer-events-none opacity-[0.15] dark:opacity-[0.2]"
         style={{

@@ -8,7 +8,6 @@ import { motion } from "framer-motion";
 export function DownloadSection() {
   return (
     <section id="download" className="py-20 relative overflow-hidden">
-      {/* Grid Pattern */}
       <div 
         className="absolute inset-0 pointer-events-none opacity-[0.075] dark:opacity-10"
         style={{
@@ -22,14 +21,24 @@ export function DownloadSection() {
 
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-2xl mx-auto text-center">
-          <div className="space-y-4">
-            <h2 className="text-3xl md:text-4xl font-bold">
+          <div className="space-y-6">
+            <motion.h2 
+              className="text-4xl md:text-5xl font-bold text-black dark:text-white"
+              initial={{ opacity: 0, y: 50 }} 
+              animate={{ opacity: 1, y: 0 }} 
+              transition={{ duration: 1 }}
+            >
               Ready to Play?
-            </h2>
-            <p className="text-xl text-muted-foreground">
-              Download X&O Battle now and start playing the ultimate Tic-Tac-Toe game.
-            </p>
-            <div className="h-2" />
+            </motion.h2>
+            <motion.p
+              className="text-lg text-muted-foreground"
+              initial={{ opacity: 0 }} 
+              animate={{ opacity: 1 }} 
+              transition={{ duration: 1.5 }}
+            >
+              Download X&O Battle now and dive into the customisation and more!
+            </motion.p>
+            <div className="h-4" />
             <Link 
               href="https://apps.apple.com/us/app/x-o-battle/id6745736399"
               target="_blank"
@@ -41,7 +50,7 @@ export function DownloadSection() {
               >
                 <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 <span className="relative flex items-center">
-                  <Apple className="mr-2 h-5 w-5" />
+                  <Apple className="mr-3 h-6 w-6" />
                   <span className="font-medium">Download on App Store</span>
                 </span>
               </Button>
