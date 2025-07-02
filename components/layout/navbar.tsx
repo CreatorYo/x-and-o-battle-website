@@ -230,7 +230,7 @@ export function Navbar() {
                 </Link>
               ))}
             </div>
-            <div className="mt-8">
+            <div className="mt-[403px]">
               <Link
                 href="https://apps.apple.com/us/app/x-o-battle/id6745736399"
                 target="_blank"

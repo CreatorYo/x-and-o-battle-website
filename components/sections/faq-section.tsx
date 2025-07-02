@@ -6,25 +6,25 @@ import { ChevronDown } from "lucide-react";
 import Link from "next/link";
 
 const faqs = [
-  {
+   {
+    question: "How is my privacy protected?",
+    answer: <>We take your privacy seriously. The game contains no advertisements and does not track or sell your data. <Link href="https://policies.creatoryogames.com/x-and-o-battle-policies-game/privacy-policy" className="text-blue-700 dark:text-blue-300 hover:underline" target="_blank" rel="noopener noreferrer">Learn more</Link></>
+  },
+   {
     question: "Can I customise the look of the game?",
     answer: "Yes, you can personalise your experience by choosing from unique themes, presets and accent colours to suit your style."
   },
-  {
-    question: "Can I play against other people or only the computer?",
-    answer: "You can choose to play against a friend or an AI opponent. The AI difficulty and response time are both customisable."
+    {
+    question: "Is my game data saved automatically?",
+    answer: "Yes, your achievements and other data are saved automatically, ensuring your progress is never lost within the app."
   },
-  {
+   {
     question: "Are achievements tracked within the game?",
     answer: "Yes, the game includes an achievement system that allows you to monitor your progress."
   },
   {
-    question: "Is my game data saved automatically?",
-    answer: "Yes, your achievements and other data are saved automatically, ensuring your progress is never lost within the app."
-  },
-  {
-    question: "How is my privacy protected?",
-    answer: <>We take your privacy seriously. The game contains no advertisements and does not track or sell your data. <Link href="https://policies.creatoryogames.com/x-and-o-battle-policies-game/privacy-policy" className="text-blue-700 dark:text-blue-300 hover:underline" target="_blank" rel="noopener noreferrer">Learn more</Link></>
+    question: "Can I play against other people or only the computer?",
+    answer: "You can challenge  a friend or take on an AI opponent. The AI difficulty and response time are both customisable."
   }
 ];
 
