@@ -77,7 +77,7 @@ export function FeaturesSection() {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">Game Features</h2>
+          <h2 className="text-3xl md:text-5xl font-bold mb-4">Game Features</h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             Discover what makes X&O Battle the ultimate Tic-Tac-Toe experience
           </p>

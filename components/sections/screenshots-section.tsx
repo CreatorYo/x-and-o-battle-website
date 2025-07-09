@@ -4,9 +4,8 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
-import { ChevronLeft, ChevronRight, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, X, Expand } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import Lightbox from "yet-another-react-lightbox";
 import Zoom from "yet-another-react-lightbox/plugins/zoom";
 import "yet-another-react-lightbox/styles.css";
@@ -50,7 +49,7 @@ export function ScreenshotsSection() {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">Game Screenshots</h2>
+          <h2 className="text-3xl md:text-5xl font-bold mb-4">Game Screenshots</h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             Take a peek at the X&O Battle experience
           </p>
@@ -134,10 +133,11 @@ export function ScreenshotsSection() {
             </div>
           </div>
 
-          <div className="text-center mt-12">
-            <Badge variant="secondary" className="bg-background/80 backdrop-blur-sm select-none">
-              Screenshots may be outdated
-            </Badge>
+             <div className="text-center mt-12 space-y-2">
+            <p className="text-sm text-muted-foreground">
+              <Expand className="inline h-4 w-4 mr-1" />
+              Press any screenshot to view in full screen
+            </p>
           </div>
         </div>
       </div>
