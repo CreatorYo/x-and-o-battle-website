@@ -9,10 +9,11 @@ import { Apple, Menu, X, Mail } from "lucide-react"
 import { MobileThemeSwitcher } from "@/components/mobile-theme-switcher"
 
 const BANNER_CONFIG = {
-  enabled: false,
+  enabled: true,
+  storageKey: "v2-feedback-banner-dismissed",
   content: {
-    message: "",
-    link: "",
+    message: "We're working on version 2 with new features! We'd love to hear your feedback on how we can improve.",
+    link: "mailto:help@creatoryogames.com",
   },
   style: {
     backgroundColor: "#094085",
@@ -30,7 +31,7 @@ export function Navbar() {
   useEffect(() => {
     setIsClient(true)
     if (BANNER_CONFIG.enabled) {
-      const dismissed = localStorage.getItem("banner-dismissed")
+      const dismissed = localStorage.getItem(BANNER_CONFIG.storageKey)
       if (dismissed !== "true") {
         setIsBannerVisible(true)
         setTimeout(() => setIsBannerAnimated(true), 100)
@@ -81,7 +82,7 @@ export function Navbar() {
     setIsBannerAnimated(false)
     setTimeout(() => setIsBannerVisible(false), 300)
     if (isClient) {
-      localStorage.setItem("banner-dismissed", "true")
+      localStorage.setItem(BANNER_CONFIG.storageKey, "true")
     }
   }
 
@@ -160,7 +161,7 @@ export function Navbar() {
             <Link href="/" className="flex items-center space-x-2.5 select-none">
               <div className="relative w-8 h-8 overflow-hidden rounded-full">
                 <Image
-                  src="https://i.imgur.com/Hsi3uwx.png"
+                  src="https://i.imgur.com/HXVpBdO.png"
                   alt="X&O Battle Logo"
                   fill
                   draggable="false"

@@ -36,7 +36,7 @@ export function DownloadSection() {
               animate={{ opacity: 1 }} 
               transition={{ duration: 1.5 }}
             >
-              Download X&O Battle now and dive into the customisation and more!
+              Download X&O Battle now, and dive into the customisation and more!
             </motion.p>
             <div className="h-4" />
             <Link 
