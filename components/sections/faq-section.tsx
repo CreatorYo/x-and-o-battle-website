@@ -72,9 +72,8 @@ export function FAQSection() {
                 >
                   <h3 className="font-medium text-lg pr-8">{faq.question}</h3>
                   <ChevronDown 
-                    className={`h-5 w-5 text-muted-foreground transition-transform duration-200 flex-shrink-0 ${
-                      openIndex === index ? 'rotate-180' : ''
-                    }`}
+                   className={`h-5 w-5 transition-transform duration-200 flex-shrink-0 ${openIndex === index ? 'rotate-180' : ''}`} 
+                   style={{ color: '#0a84ff' }}
                   />
                 </button>
                 <AnimatePresence>
