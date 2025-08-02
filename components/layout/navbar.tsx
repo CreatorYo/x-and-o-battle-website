@@ -9,7 +9,7 @@ import { Apple, Menu, X, Mail } from "lucide-react"
 import { MobileThemeSwitcher } from "@/components/mobile-theme-switcher"
 
 const BANNER_CONFIG = {
-  enabled: true,
+  enabled: false,
   storageKey: "v2-feedback-banner-dismissed",
   content: {
     message: "We're working on version 2 with new features! We'd love to hear your feedback on how we can improve.",
