@@ -12,15 +12,15 @@ import "yet-another-react-lightbox/styles.css";
 
 const screenshots = [
   {
-    src: "https://i.imgur.com/q3Qe7Y8.png",
+    src: "https://i.imgur.com/LiAtKu9.png",
     alt: "Game screenshot showing the board",
   },
   {
-    src: "https://i.imgur.com/WdTmjsm.png",
+    src: "https://i.imgur.com/fdZ12uy.png",
     alt: "Game screenshot showing switch game mode menu",
   },
   {
-    src: "https://i.imgur.com/STAh2Mk.png",
+    src: "https://i.imgur.com/cAXwTUb.png",
     alt: "Game screenshot showing settings menu",
   },
 ];
