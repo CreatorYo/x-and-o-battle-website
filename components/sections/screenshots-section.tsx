@@ -12,15 +12,15 @@ import "yet-another-react-lightbox/styles.css";
 
 const screenshots = [
   {
-    src: "https://i.imgur.com/ZDznRpd.png",
+    src: "https://assets.creatoryogames.com/xobattle-assets/MainBoardScreenshot.png",
     alt: "Game screenshot showing the board",
   },
   {
-    src: "https://i.imgur.com/fG9DveX.png",
+    src: "https://assets.creatoryogames.com/xobattle-assets/SwitchGameModeScreenshot.png",
     alt: "Game screenshot showing switch game mode menu",
   },
   {
-    src: "https://i.imgur.com/yGgaySt.png",
+    src: "https://assets.creatoryogames.com/xobattle-assets/ThemesModaScreenshot.png",
     alt: "Game screenshot showing the themes modal",
   },
 ];

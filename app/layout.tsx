@@ -11,8 +11,8 @@ export const metadata: Metadata = {
   title: 'X&O Battle',
   description: 'X&O Battle is a sleek take on tic-tac-toe with customisability and more.',
   icons: {
-    icon: 'https://i.imgur.com/Hsi3uwx.png',
-    apple: 'https://i.imgur.com/Hsi3uwx.png',
+    icon: 'https://assets.creatoryogames.com/xobattle-assets/XO_Battle_Logo.png',
+    apple: 'https://assets.creatoryogames.com/xobattle-assets/XO_Battle_Logo.png',
   },
 };
 
@@ -24,8 +24,8 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <link rel="icon" href="https://i.imgur.com/Hsi3uwx.png"/>
-        <link rel="apple-touch-icon" href="https://i.imgur.com/Hsi3uwx.png"/>
+        <link rel="icon" href="https://assets.creatoryogames.com/xobattle-assets/XO_Battle_Logo.png"/>
+        <link rel="apple-touch-icon" href="https://assets.creatoryogames.com/xobattle-assets/XO_Battle_Logo.png"/>
         <meta name="keywords" content="Tic Tac Toe, X&O Battle, X and O Battle, 2 Player Game"/>
         <meta name="apple-itunes-app" content="app-id=6745736399"/>
         <script
