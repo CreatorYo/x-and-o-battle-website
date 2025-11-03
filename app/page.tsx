@@ -5,6 +5,7 @@ import { FeaturesSection } from "@/components/sections/features-section";
 import { ScreenshotsSection } from "@/components/sections/screenshots-section";
 import { FAQSection } from "@/components/sections/faq-section";
 import { DownloadSection } from "@/components/sections/download-section";
+import { QRCodeDownload } from "@/components/qr-code-download";
 
 export default function Home() {
   return (
@@ -16,6 +17,7 @@ export default function Home() {
       <FAQSection />
       <DownloadSection />
       <Footer />
+      <QRCodeDownload />
     </main>
   );
 }

@@ -94,8 +94,8 @@ export function Navbar() {
 
   const navLinks = [
     { name: "Home", href: "/" },
-    { name: "Features", href: "#features" },
-    { name: "Screenshots", href: "#screenshots" },
+    { name: "Features", href: "/#features" },
+    { name: "Screenshots", href: "/#screenshots" },
   ]
 
   const showBanner = isClient && isBannerVisible && BANNER_CONFIG.enabled

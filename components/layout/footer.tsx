@@ -11,13 +11,13 @@ export function Footer() {
         <div className="max-w-6xl mx-auto">
           <div className="flex flex-wrap gap-6 justify-center mb-16">
             <Link 
-              href="#features" 
+              href="/#features" 
               className="select-none px-4 py-2 rounded-full text-foreground/60 hover:text-foreground hover:bg-foreground/5 transition-colors"
             >
               Features
             </Link>
             <Link 
-              href="#screenshots" 
+              href="/#screenshots" 
               className="select-none px-4 py-2 rounded-full text-foreground/60 hover:text-foreground hover:bg-foreground/5 transition-colors"
             >
               Screenshots

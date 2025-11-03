@@ -97,6 +97,164 @@ html {
   }
 
   ::selection {
+    background-color: #002468;
+    color: #91B5F7;
+  }
+  ::-moz-selection {
+    background-color: #002468;
+    color: #91B5F7;
+  }
+
+  .light ::selection {
+    background-color: #95BAFF;
+    color: #144090;
+  }
+  .light ::-moz-selection {
+    background-color: #95BAFF;
+    color: #144090;
+  }
+}
+
+@layer components {
+  .nav-link {
+    @apply relative text-sm font-medium transition-colors hover:text-foreground;
+  }
+  
+  .nav-link::after {
+    @apply content-[''] absolute left-0 -bottom-1 h-[2px] w-0 bg-primary transition-all duration-300;
+  }
+  
+  .nav-link:hover::after {
+    @apply w-full;
+  }
+
+  .mobile-nav-link {
+    @apply text-sm font-medium transition-colors hover:text-foreground;
+  }
+
+  .feature-rose ::selection {
+    @apply bg-rose-500/30 text-foreground;
+  }
+  
+  .feature-blue ::selection {
+    @apply bg-blue-500/30 text-foreground;
+  }
+  
+  .feature-yellow ::selection {
+    @apply bg-yellow-500/30 text-foreground;
+  }
+  
+  .feature-green ::selection {
+    @apply bg-green-500/30 text-foreground;
+  }
+  
+  .feature-purple ::selection {
+    @apply bg-purple-500/30 text-foreground;
+  }
+  
+  .feature-orange ::selection {
+    @apply bg-orange-500/30 text-foreground;
+  }
+}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background-rgb: 255, 255, 255;
+  --foreground-rgb: 0, 0, 0;
+  --background: 0 0% 100%;
+  --foreground: 0 0% 0%;
+  --card: 0 0% 100%;
+  --card-foreground: 0 0% 0%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 0 0% 0%;
+  --primary: 213 100% 50%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 0 0% 96%;
+  --secondary-foreground: 0 0% 0%;
+  --muted: 0 0% 96%;
+  --muted-foreground: 0 0% 45%;
+  --accent: 0 0% 96%;
+  --accent-foreground: 0 0% 0%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 0 0% 90%;
+  --input: 0 0% 90%;
+  --ring: 213 100% 50%;
+  --scrollbar-color-bg: 0, 0%, 84%;
+}
+
+.dark {
+  --background-rgb: 0, 0, 0;
+  --foreground-rgb: 255, 255, 255;
+  --background: 0 0% 0%;
+  --foreground: 0 0% 100%;
+  --card: 0 0% 0%;
+  --card-foreground: 0 0% 100%;
+  --popover: 0 0% 0%;
+  --popover-foreground: 0 0% 100%;
+  --primary: 213 100% 50%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 0 0% 10%;
+  --secondary-foreground: 0 0% 100%;
+  --muted: 0 0% 10%;
+  --muted-foreground: 0 0% 63.9%;
+  --accent: 0 0% 10%;
+  --accent-foreground: 0 0% 100%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 0 0% 20%;
+  --input: 0 0% 20%;
+  --ring: 213 100% 50%;
+  --scrollbar-color-bg: 0 0% 10%;
+}
+
+.navigation-bar-backdrop-filter {
+  backdrop-filter: blur(7px) saturate(180%) brightness(150%);
+  -webkit-backdrop-filter: blur(7px) saturate(180%) brightness(150%);
+}
+
+.light .navigation-bar-backdrop-filter {
+  backdrop-filter: blur(7px) saturate(180%) brightness(100%);
+  -webkit-backdrop-filter: blur(7px) saturate(180%) brightness(100%);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(var(--background));
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--scrollbar-color-bg));
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--primary));
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  button, img {
+    @apply select-none;
+  }
+
+  ::selection {
     background-color: #222222;
     color: white;
   }
