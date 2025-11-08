@@ -9,6 +9,8 @@ export default function ClientTitleUpdater() {
   useEffect(() => {
     if (pathname === "/") {
       document.title = "X&O Battle"
+    } else if (pathname === "/submit-feedback") {
+      document.title = "Submit Feedback - X&O Battle"
     } else {
       document.title = "X&O Battle: Page not found"
     }

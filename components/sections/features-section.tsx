@@ -96,7 +96,7 @@ export function FeaturesSection() {
         >
           <h2 className="text-3xl md:text-5xl font-bold mb-4">Game Features</h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Discover what makes X&O Battle the ultra experience
+            Discover what makes X&O Battle the ultimate experience
           </p>
         </motion.div>
 

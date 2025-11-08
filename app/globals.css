@@ -25,6 +25,7 @@
   --input: 0 0% 90%;
   --ring: 213 100% 50%;
   --scrollbar-color-bg: 0, 0%, 84%;
+  --radius: 0.5rem;
 }
 
 .dark {
@@ -50,6 +51,7 @@
   --input: 0 0% 20%;
   --ring: 213 100% 50%;
   --scrollbar-color-bg: 0 0% 10%;
+  --radius: 0.5rem;
 }
 
 .navigation-bar-backdrop-filter {
@@ -183,6 +185,7 @@ html {
   --input: 0 0% 90%;
   --ring: 213 100% 50%;
   --scrollbar-color-bg: 0, 0%, 84%;
+  --radius: 0.5rem;
 }
 
 .dark {
@@ -208,6 +211,7 @@ html {
   --input: 0 0% 20%;
   --ring: 213 100% 50%;
   --scrollbar-color-bg: 0 0% 10%;
+  --radius: 0.5rem;
 }
 
 .navigation-bar-backdrop-filter {
