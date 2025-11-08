@@ -10,7 +10,7 @@ export default function ClientTitleUpdater() {
     if (pathname === "/") {
       document.title = "X&O Battle"
     } else if (pathname === "/submit-feedback") {
-      document.title = "Submit Feedback - X&O Battle"
+      document.title = "X&O Battle - Submit Feedback"
     } else {
       document.title = "X&O Battle: Page not found"
     }

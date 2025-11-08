@@ -29,10 +29,10 @@ export function Footer() {
               Privacy
             </Link>
             <Link 
-              href="https://help.creatoryogames.com"
+              href="/submit-feedback"
               className="select-none px-4 py-2 rounded-full text-foreground/60 hover:text-foreground hover:bg-foreground/5 transition-colors"
             >
-              Help Centre
+              Feedback
             </Link>
           </div>
 
