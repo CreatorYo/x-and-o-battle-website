@@ -81,17 +81,26 @@ export default function SubmitFeedbackPage() {
 
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth >= 768) {
+      const isDesktop = window.innerWidth >= 768;
+      
+      if (isDesktop) {
         if (isSheetOpen) {
           setIsSheetOpen(false);
           setIsDialogOpen(true);
         }
+      } else {
+        if (isDialogOpen) {
+          setIsDialogOpen(false);
+          setIsSheetOpen(true);
+        }
       }
     };
 
+    handleResize();
+
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, [isSheetOpen]);
+  }, [isSheetOpen, isDialogOpen]);
 
 
   const onSubmit = async (data: FeedbackFormValues) => {
