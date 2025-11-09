@@ -33,8 +33,16 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, ArrowRight, Bug, Lightbulb, MessageSquare, Smartphone, Globe, Layers } from "lucide-react";
+import { Loader, ArrowRight, Bug, Lightbulb, MessageSquare, Smartphone, Globe, Layers } from "lucide-react";
 
 const feedbackSchema = z.object({
   title: z.string().min(1, "Title is required").max(200, "Title must be less than 200 characters"),
@@ -54,6 +62,8 @@ export default function SubmitFeedbackPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [focusedField, setFocusedField] = useState<string | null>(null);
   const [formKey, setFormKey] = useState(0);
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { toast } = useToast();
 
   const form = useForm<FeedbackFormValues>({
@@ -68,6 +78,20 @@ export default function SubmitFeedbackPage() {
   });
 
   const selectedCategory = form.watch("category");
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        if (isSheetOpen) {
+          setIsSheetOpen(false);
+          setIsDialogOpen(true);
+        }
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [isSheetOpen]);
 
 
   const onSubmit = async (data: FeedbackFormValues) => {
@@ -99,6 +123,7 @@ export default function SubmitFeedbackPage() {
         title: "Feedback submitted!",
         description: "Thank you for your feedback. We'll review it soon.",
         variant: "success",
+        duration: 5800,
       });
 
       form.reset({
@@ -152,7 +177,6 @@ export default function SubmitFeedbackPage() {
                 onSubmit={form.handleSubmit(onSubmit)} 
                 className="space-y-8"
               >
-                {/* Basic Information Group */}
                 <div className="space-y-6">
                   <FormField
                     control={form.control}
@@ -214,7 +238,7 @@ export default function SubmitFeedbackPage() {
                           >
                             <FormControl>
                               <SelectTrigger 
-                                className="h-11 border-border/50 bg-background font-medium"
+                                className="h-11 border-border/50 bg-background font-medium hover:bg-muted/30"
                                 style={{ borderRadius: '0.5rem' }}
                               >
                                 <SelectValue placeholder="Select a category" />
@@ -259,7 +283,7 @@ export default function SubmitFeedbackPage() {
                           >
                             <FormControl>
                               <SelectTrigger 
-                                className="h-11 border-border/50 bg-background font-medium"
+                                className="h-11 border-border/50 bg-background font-medium hover:bg-muted/30"
                                 style={{ borderRadius: '0.5rem' }}
                               >
                                 <SelectValue placeholder="Select which platform" />
@@ -336,7 +360,6 @@ export default function SubmitFeedbackPage() {
                   )}
                 </div>
 
-                {/* Description Group */}
                 <div className="space-y-6">
                   <FormField
                     control={form.control}
@@ -437,8 +460,38 @@ export default function SubmitFeedbackPage() {
                         <FormMessage />
                         <p className="text-xs text-muted-foreground leading-relaxed mt-2">
                           We only include the information you enter and a timestamp when feedback is sent. Please avoid sharing any personal or sensitive information.{" "}
-                          <Dialog>
-                            <DialogTrigger asChild>
+                          <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
+                            <SheetTrigger asChild>
+                              <button
+                                type="button"
+                                className="text-blue-500 dark:text-blue-300 hover:underline inline md:hidden"
+                              >
+                                Learn more
+                              </button>
+                            </SheetTrigger>
+                            <SheetContent side="bottom" className="max-h-[90vh] overflow-y-auto rounded-t-2xl border-t border-border/80 dark:border-border/60 [&>button]:outline-none [&>button]:ring-0 [&>button]:focus:ring-0">
+                              <SheetHeader>
+                                <SheetTitle className="text-xl font-semibold">Privacy Information</SheetTitle>
+                                <SheetDescription className="pt-4 space-y-4 text-left">
+                                  <p className="text-sm text-foreground/80 dark:text-foreground/70 leading-relaxed">
+                                    When you submit feedback through this form, we collect and process the following information:
+                                  </p>
+                                  <ul className="list-disc list-inside space-y-2 text-sm text-foreground/80 dark:text-foreground/70 leading-relaxed pl-2 [&>li::marker]:text-blue-600 dark:[&>li::marker]:text-blue-500">
+                                    <li>The title, description, and category you provide in the form</li>
+                                    <li>A timestamp indicating when the feedback was submitted</li>
+                                  </ul>
+                                  <p className="text-sm text-foreground/80 dark:text-foreground/70 leading-relaxed">
+                                    We do not collect, store, or process any personal information. The feedback is sent directly to our team for review purposes only.
+                                  </p>
+                                  <p className="text-sm text-foreground/80 dark:text-foreground/70 font-medium leading-relaxed">
+                                    Please avoid sharing any personal or sensitive information in your feedback, as it will be visible to our team members who review submissions.
+                                  </p>
+                                </SheetDescription>
+                              </SheetHeader>
+                            </SheetContent>
+                          </Sheet>
+                          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                            <DialogTrigger asChild className="hidden md:inline">
                               <button
                                 type="button"
                                 className="text-blue-500 dark:text-blue-300 hover:underline inline"
@@ -476,12 +529,12 @@ export default function SubmitFeedbackPage() {
                 <Button
                   type="submit"
                   className="h-11 px-6 bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
-                  style={{ borderRadius: '0.5rem' }}
+                  style={{ borderRadius: '0.5rem', marginTop: '1.3rem' }}
                   disabled={isSubmitting}
                 >
                   {isSubmitting ? (
                     <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      <Loader className="mr-2 h-4 w-4 animate-spin" />
                       Submitting...
                     </>
                   ) : (
