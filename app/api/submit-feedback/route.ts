@@ -4,7 +4,7 @@ export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 
 function sanitizeForDiscord(text: string, maxLength: number): string {
-  let sanitized = text.replace(/[\x00-\x1F\x7F]/g, '');
+  let sanitized = text.replace(/[\x00-\x08\x0B-\x0C\x0E-\x1F\x7F]/g, '');
   
   if (sanitized.length > maxLength) {
     sanitized = sanitized.substring(0, maxLength - 3) + '...';
@@ -44,18 +44,25 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { title, description, category } = body;
+    const { title, description, category, device, platform } = body;
 
-    if (!title || !description || !category) {
+    if (!title || !description || !category || !platform) {
       return NextResponse.json(
         { error: "Missing required fields" },
         { status: 400 }
       );
     }
 
-    if (typeof title !== 'string' || typeof description !== 'string' || typeof category !== 'string') {
+    if (typeof title !== 'string' || typeof description !== 'string' || typeof category !== 'string' || typeof platform !== 'string') {
       return NextResponse.json(
         { error: "Invalid field types" },
+        { status: 400 }
+      );
+    }
+
+    if (device !== undefined && device !== null && typeof device !== 'string') {
+      return NextResponse.json(
+        { error: "Invalid device field type" },
         { status: 400 }
       );
     }
@@ -68,10 +75,16 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const sanitizedDescription = sanitizeForDiscord(description.trim(), 4096);
-    if (sanitizedDescription.length === 0 || sanitizedDescription.length > 2000) {
+    const sanitizedDescription = sanitizeForDiscord(description.trim(), 1800);
+    if (sanitizedDescription.length === 0) {
       return NextResponse.json(
-        { error: "Description must be between 1 and 2000 characters" },
+        { error: "Description is required" },
+        { status: 400 }
+      );
+    }
+    if (sanitizedDescription.length > 1800) {
+      return NextResponse.json(
+        { error: "Description must be less than 1800 characters" },
         { status: 400 }
       );
     }
@@ -80,6 +93,14 @@ export async function POST(request: NextRequest) {
     if (!validCategories.includes(category)) {
       return NextResponse.json(
         { error: "Invalid category" },
+        { status: 400 }
+      );
+    }
+
+    const validPlatforms = ["app", "web", "both"];
+    if (!validPlatforms.includes(platform)) {
+      return NextResponse.json(
+        { error: "Invalid platform" },
         { status: 400 }
       );
     }
@@ -100,31 +121,69 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const embed = {
+    let sanitizedDevice = "";
+    if (device && typeof device === 'string') {
+      sanitizedDevice = sanitizeForDiscord(device.trim(), 100);
+    }
+
+    const embedFields: any[] = [
+      {
+        name: "Category",
+        value: category,
+        inline: true,
+      },
+      {
+        name: "Which platform?",
+        value: platform === "app" ? "App" : platform === "web" ? "Web" : "Both",
+        inline: true,
+      },
+      {
+        name: "Title",
+        value: sanitizedTitle,
+        inline: false,
+      },
+    ];
+
+    if (category === "Bug Report" && sanitizedDevice) {
+      embedFields.push({
+        name: "Device",
+        value: sanitizedDevice,
+        inline: true,
+      });
+    }
+
+    let embedDescription = "";
+    let descriptionField = null;
+
+    if (sanitizedDescription.length <= 1024) {
+      descriptionField = {
+        name: "Description",
+        value: sanitizedDescription,
+        inline: false,
+      };
+    } else {
+      embedDescription = sanitizedDescription.length > 4096 
+        ? sanitizedDescription.substring(0, 4093) + '...' 
+        : sanitizedDescription;
+    }
+
+    if (descriptionField) {
+      embedFields.push(descriptionField);
+    }
+
+    const embed: any = {
       title: "New Feedback Submission",
       color: category === "Bug Report" ? 15158332 : category === "Feature Request" ? 3066993 : 3447003,
-      fields: [
-        {
-          name: "Category",
-          value: category,
-          inline: true,
-        },
-        {
-          name: "Title",
-          value: sanitizedTitle,
-          inline: false,
-        },
-        {
-          name: "Description",
-          value: sanitizedDescription,
-          inline: false,
-        },
-      ],
+      fields: embedFields,
       timestamp: new Date().toISOString(),
       footer: {
         text: "X&O Battle Feedback",
       },
     };
+
+    if (embedDescription) {
+      embed.description = embedDescription;
+    }
 
     try {
       const controller = new AbortController();
