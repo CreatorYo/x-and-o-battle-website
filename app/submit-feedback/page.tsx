@@ -28,7 +28,6 @@ import {
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -36,7 +35,6 @@ import {
 import {
   Sheet,
   SheetContent,
-  SheetDescription,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -44,13 +42,28 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { Loader, ArrowRight, Bug, Lightbulb, MessageSquare, Smartphone, Globe, Layers } from "lucide-react";
 
+const isOnlyWhitespace = (str: string): boolean => {
+  if (!str || str.length === 0) return true;
+  
+  const cleaned = str.replace(/[\s\u00A0\u200B-\u200D\uFEFF\u2060\u200E\u200F\u202A-\u202E]/g, '');
+  return cleaned.length === 0;
+};
+
 const feedbackSchema = z.object({
-  title: z.string().min(1, "Title is required").max(200, "Title must be less than 200 characters"),
-  description: z.string().min(1, "Description is required").max(1800, "Description must be less than 1800 characters"),
+  title: z.string()
+    .min(1, "Title is required")
+    .max(200, "Title must be less than 200 characters")
+    .refine((val) => !isOnlyWhitespace(val), "Title cannot be only whitespace"),
+  description: z.string()
+    .min(1, "Description is required")
+    .max(1800, "Description must be less than 1800 characters")
+    .refine((val) => !isOnlyWhitespace(val), "Description cannot be only whitespace"),
   category: z.enum(["Bug Report", "Feature Request", "General Feedback"], {
     required_error: "Please select a category",
   }),
-  device: z.string().optional(),
+  device: z.string()
+    .optional()
+    .refine((val) => !val || !isOnlyWhitespace(val), "Device cannot be only whitespace"),
   platform: z.enum(["app", "web", "both"], {
     required_error: "Please select which platform",
   }),
@@ -78,6 +91,65 @@ export default function SubmitFeedbackPage() {
   });
 
   const selectedCategory = form.watch("category");
+
+  const getCategoryColors = () => {
+    if (selectedCategory === "Bug Report") {
+      return {
+        text: "text-destructive dark:text-red-400",
+        hover: "hover:bg-red-100 dark:hover:bg-red-950/40",
+        focus: "focus:bg-red-100 dark:focus:bg-red-950/40",
+        focusRing: "focus-visible:outline-none focus-visible:border-red-500/60 focus-visible:ring-1 focus-visible:ring-red-500/40",
+        focusRingDropdown: "focus:outline-none focus:border-red-500/60 focus:ring-1 focus:ring-red-500/40",
+        bg: "bg-destructive hover:bg-destructive/90",
+        focusRingButton: "focus:ring-destructive/50",
+        checkmark: "[&>span:first-child_svg]:!text-destructive [&>span:first-child_svg]:dark:!text-red-400",
+        buttonText: "text-white",
+        marker: "[&>li::marker]:text-destructive dark:[&>li::marker]:text-red-400",
+      };
+    }
+    if (selectedCategory === "Feature Request") {
+      return {
+        text: "text-yellow-600 dark:text-yellow-500",
+        hover: "hover:bg-yellow-100 dark:hover:bg-yellow-950/40",
+        focus: "focus:bg-yellow-100 dark:focus:bg-yellow-950/40",
+        focusRing: "focus-visible:outline-none focus-visible:border-yellow-500/60 focus-visible:ring-1 focus-visible:ring-yellow-500/40",
+        focusRingDropdown: "focus:outline-none focus:border-yellow-500/60 focus:ring-1 focus:ring-yellow-500/40",
+        bg: "bg-yellow-600 hover:bg-yellow-600/90 dark:bg-yellow-500 dark:hover:bg-yellow-500/90",
+        focusRingButton: "focus:ring-yellow-500/50",
+        checkmark: "[&>span:first-child_svg]:!text-yellow-600 [&>span:first-child_svg]:dark:!text-yellow-500",
+        buttonText: "text-white dark:text-black",
+        marker: "[&>li::marker]:text-yellow-600 dark:[&>li::marker]:text-yellow-500",
+      };
+    }
+    if (selectedCategory === "General Feedback") {
+      return {
+        text: "text-blue-600 dark:text-blue-400",
+        hover: "hover:bg-blue-100 dark:hover:bg-blue-950/40",
+        focus: "focus:bg-blue-100 dark:focus:bg-blue-950/40",
+        focusRing: "focus-visible:outline-none focus-visible:border-blue-500/60 focus-visible:ring-1 focus-visible:ring-blue-500/40",
+        focusRingDropdown: "focus:outline-none focus:border-blue-500/60 focus:ring-1 focus:ring-blue-500/40",
+        bg: "bg-blue-600 hover:bg-blue-600/90 dark:bg-blue-500 dark:hover:bg-blue-500/90",
+        focusRingButton: "focus:ring-blue-500/50",
+        checkmark: "[&>span:first-child_svg]:!text-blue-600 [&>span:first-child_svg]:dark:!text-blue-400",
+        buttonText: "text-white",
+        marker: "[&>li::marker]:text-blue-600 dark:[&>li::marker]:text-blue-400",
+      };
+    }
+    return {
+      text: "text-primary",
+      hover: "hover:bg-primary/10 dark:hover:bg-primary/20",
+      focus: "focus:bg-primary/10 dark:focus:bg-primary/20",
+      focusRing: "focus-visible:outline-none focus-visible:border-ring/60 focus-visible:ring-1 focus-visible:ring-ring/40",
+      focusRingDropdown: "focus:outline-none focus:border-ring/60 focus:ring-1 focus:ring-ring/40",
+      bg: "bg-primary hover:bg-primary/90",
+      focusRingButton: "focus:ring-primary/50",
+      checkmark: "",
+      buttonText: "text-white",
+      marker: "[&>li::marker]:text-blue-600 dark:[&>li::marker]:text-blue-500",
+    };
+  };
+
+  const categoryColors = getCategoryColors();
 
   useEffect(() => {
     const handleResize = () => {
@@ -158,7 +230,7 @@ export default function SubmitFeedbackPage() {
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Failed to submit feedback. Please try again later.";
       toast({
-        title: "Error",
+        title: "Something went wrong",
         description: errorMessage,
         variant: "destructive",
       });
@@ -174,7 +246,7 @@ export default function SubmitFeedbackPage() {
         <div className="space-y-8">
           <div className="space-y-3">
             <h1 className="text-4xl md:text-5xl font-serif font-bold tracking-tight">
-              Submit <span className="text-primary">Feedback</span>
+              Submit <span className={`transition-colors duration-200 ease-in-out ${categoryColors.text || "text-primary"}`}>Feedback</span>
             </h1>
             <p className="text-base text-muted-foreground">
               We'd love to hear your thoughts, suggestions, or report any issues you've encountered.
@@ -214,7 +286,7 @@ export default function SubmitFeedbackPage() {
                         <FormControl>
                           <Input
                             placeholder="Enter a brief summary"
-                            className="h-11 border-border/50 bg-background"
+                            className={`h-11 border-border/50 bg-background transition-colors ${categoryColors.focusRing}`}
                             style={{ borderRadius: '0.5rem' }}
                             {...field}
                             disabled={isSubmitting}
@@ -247,28 +319,28 @@ export default function SubmitFeedbackPage() {
                           >
                             <FormControl>
                               <SelectTrigger 
-                                className="h-11 border-border/50 bg-background font-medium hover:bg-muted/30"
+                                className={`h-11 border-border/50 bg-background font-medium hover:bg-muted/30 transition-colors ${categoryColors.focusRingDropdown}`}
                                 style={{ borderRadius: '0.5rem' }}
                               >
                                 <SelectValue placeholder="Select a category" />
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent className="rounded-lg shadow-xl">
-                              <SelectItem value="Bug Report">
+                              <SelectItem value="Bug Report" className="hover:bg-red-100 dark:hover:bg-red-950/40 focus:bg-red-100 dark:focus:bg-red-950/40 [&>span:first-child_svg]:!text-destructive [&>span:first-child_svg]:dark:!text-red-400">
                                 <div className="flex items-center gap-2">
-                                  <Bug className="h-4 w-4" />
+                                  <Bug className="h-4 w-4 text-destructive dark:text-red-400" />
                                   <span>Bug Report</span>
                                 </div>
                               </SelectItem>
-                              <SelectItem value="Feature Request">
+                              <SelectItem value="Feature Request" className="hover:bg-yellow-100 dark:hover:bg-yellow-950/40 focus:bg-yellow-100 dark:focus:bg-yellow-950/40 [&>span:first-child_svg]:!text-yellow-600 [&>span:first-child_svg]:dark:!text-yellow-500">
                                 <div className="flex items-center gap-2">
-                                  <Lightbulb className="h-4 w-4" />
+                                  <Lightbulb className="h-4 w-4 text-yellow-600 dark:text-yellow-500" />
                                   <span>Feature Request</span>
                                 </div>
                               </SelectItem>
-                              <SelectItem value="General Feedback">
+                              <SelectItem value="General Feedback" className="hover:bg-blue-100 dark:hover:bg-blue-950/40 focus:bg-blue-100 dark:focus:bg-blue-950/40 [&>span:first-child_svg]:!text-blue-600 [&>span:first-child_svg]:dark:!text-blue-400">
                                 <div className="flex items-center gap-2">
-                                  <MessageSquare className="h-4 w-4" />
+                                  <MessageSquare className="h-4 w-4 text-blue-600 dark:text-blue-400" />
                                   <span>General Feedback</span>
                                 </div>
                               </SelectItem>
@@ -292,28 +364,28 @@ export default function SubmitFeedbackPage() {
                           >
                             <FormControl>
                               <SelectTrigger 
-                                className="h-11 border-border/50 bg-background font-medium hover:bg-muted/30"
+                                className={`h-11 border-border/50 bg-background font-medium hover:bg-muted/30 transition-colors ${categoryColors.focusRingDropdown}`}
                                 style={{ borderRadius: '0.5rem' }}
                               >
                                 <SelectValue placeholder="Select which platform" />
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent className="rounded-lg shadow-xl">
-                              <SelectItem value="app">
+                              <SelectItem value="app" className={`transition-colors ${categoryColors.hover} ${categoryColors.focus} ${categoryColors.checkmark || ""}`}>
                                 <div className="flex items-center gap-2">
-                                  <Smartphone className="h-4 w-4" />
+                                  <Smartphone className={`h-4 w-4 transition-colors ${categoryColors.text || "text-primary"}`} />
                                   <span>App</span>
                                 </div>
                               </SelectItem>
-                              <SelectItem value="web">
+                              <SelectItem value="web" className={`transition-colors ${categoryColors.hover} ${categoryColors.focus} ${categoryColors.checkmark || ""}`}>
                                 <div className="flex items-center gap-2">
-                                  <Globe className="h-4 w-4" />
+                                  <Globe className={`h-4 w-4 transition-colors ${categoryColors.text || "text-primary"}`} />
                                   <span>Web</span>
                                 </div>
                               </SelectItem>
-                              <SelectItem value="both">
+                              <SelectItem value="both" className={`transition-colors ${categoryColors.hover} ${categoryColors.focus} ${categoryColors.checkmark || ""}`}>
                                 <div className="flex items-center gap-2">
-                                  <Layers className="h-4 w-4" />
+                                  <Layers className={`h-4 w-4 transition-colors ${categoryColors.text || "text-primary"}`} />
                                   <span>Both</span>
                                 </div>
                               </SelectItem>
@@ -325,48 +397,66 @@ export default function SubmitFeedbackPage() {
                     />
                   </div>
 
-                  {selectedCategory === "Bug Report" && (
-                    <FormField
-                      control={form.control}
-                      name="device"
-                      render={({ field }) => (
-                        <FormItem>
-                            <div className="flex justify-between items-center mb-2">
-                              <FormLabel className="text-sm font-medium">Device (optional)</FormLabel>
-                              {focusedField === "device" && (() => {
-                                const length = field.value?.length || 0;
-                                const maxLength = 50;
-                                const isAtLimit = length >= maxLength;
-                                const isClose = length >= maxLength * 0.8 && !isAtLimit;
-                                const colorClass = isAtLimit 
-                                  ? "text-destructive dark:text-red-400" 
-                                  : isClose 
-                                  ? "text-orange-600 dark:text-yellow-500" 
-                                  : "text-muted-foreground";
-                                return (
-                                  <span className={`text-xs ${colorClass}`}>
-                                    {length}/{maxLength}
-                                  </span>
-                                );
-                              })()}
-                            </div>
-                          <FormControl>
-                            <Input
-                              placeholder="e.g., iPhone 14, iPad Pro"
-                              className="h-11 border-border/50 bg-background"
-                              style={{ borderRadius: '0.5rem' }}
-                              {...field}
-                              disabled={isSubmitting}
-                              maxLength={50}
-                              onFocus={() => setFocusedField("device")}
-                              onBlur={() => setFocusedField(null)}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  )}
+                  <div 
+                    className={`transition-all duration-300 ease-in-out ${
+                      selectedCategory === "Bug Report" 
+                        ? "max-h-32 opacity-100" 
+                        : "max-h-0 opacity-0"
+                    }`}
+                    style={selectedCategory !== "Bug Report" ? { 
+                      marginTop: 0, 
+                      marginBottom: 0, 
+                      paddingTop: 0, 
+                      paddingBottom: 0,
+                      height: 0,
+                      overflow: 'hidden'
+                    } : { 
+                      overflow: 'visible'
+                    }}
+                  >
+                    {selectedCategory === "Bug Report" && (
+                      <FormField
+                        control={form.control}
+                        name="device"
+                        render={({ field }) => (
+                          <FormItem>
+                              <div className="flex justify-between items-center mb-2">
+                                <FormLabel className="text-sm font-medium">Device (optional)</FormLabel>
+                                {focusedField === "device" && (() => {
+                                  const length = field.value?.length || 0;
+                                  const maxLength = 50;
+                                  const isAtLimit = length >= maxLength;
+                                  const isClose = length >= maxLength * 0.8 && !isAtLimit;
+                                  const colorClass = isAtLimit 
+                                    ? "text-destructive dark:text-red-400" 
+                                    : isClose 
+                                    ? "text-orange-600 dark:text-yellow-500" 
+                                    : "text-muted-foreground";
+                                  return (
+                                    <span className={`text-xs ${colorClass}`}>
+                                      {length}/{maxLength}
+                                    </span>
+                                  );
+                                })()}
+                              </div>
+                            <FormControl>
+                              <Input
+                                placeholder="e.g., iPhone 14, iPad Pro"
+                                className={`h-11 border-border/50 bg-background transition-colors ${categoryColors.focusRing}`}
+                                style={{ borderRadius: '0.5rem' }}
+                                {...field}
+                                disabled={isSubmitting}
+                                maxLength={50}
+                                onFocus={() => setFocusedField("device")}
+                                onBlur={() => setFocusedField(null)}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    )}
+                  </div>
                 </div>
 
                 <div className="space-y-6">
@@ -412,10 +502,14 @@ export default function SubmitFeedbackPage() {
                                   }
                                 }
                               }}
-                              placeholder={selectedCategory === "Bug Report" 
-                                ? "What happened, what you expected, and how to make it happen again." 
-                                : "Please provide detailed information about your feedback..."}
-                              className="min-h-[180px] max-h-[400px] resize-none border-border/50 bg-background overflow-y-auto [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-muted-foreground/30 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:hover:bg-muted-foreground/50"
+                              placeholder={
+                                selectedCategory === "Bug Report" 
+                                  ? "What happened, what you expected, and how to make it happen again..." 
+                                  : selectedCategory === "Feature Request"
+                                  ? "Please describe your idea, why it helps, and how you imagine it working..."
+                                  : "Please provide detailed information about your feedback..."
+                              }
+                              className={`min-h-[180px] max-h-[400px] resize-none border-border/50 bg-background overflow-y-auto transition-colors ${categoryColors.focusRing} [&::-webkit-scrollbar]:hidden [-ms-overflow-style]:none [scrollbar-width]:none`}
                               style={{ borderRadius: '0.5rem' }}
                               disabled={isSubmitting}
                               maxLength={1800}
@@ -478,14 +572,14 @@ export default function SubmitFeedbackPage() {
                                 Learn more
                               </button>
                             </SheetTrigger>
-                            <SheetContent side="bottom" className="max-h-[90vh] overflow-y-auto rounded-t-2xl border-t border-border/80 dark:border-border/60 [&>button]:outline-none [&>button]:ring-0 [&>button]:focus:ring-0">
+                            <SheetContent side="bottom" className="max-h-[90vh] overflow-y-auto rounded-t-2xl border-t border-border/80 dark:border-border/60 backdrop-blur-md bg-background/95 [&>button]:outline-none [&>button]:ring-0 [&>button]:focus:ring-0">
                               <SheetHeader>
                                 <SheetTitle className="text-xl font-semibold">Privacy Information</SheetTitle>
-                                <SheetDescription className="pt-4 space-y-4 text-left">
+                                <div className="pt-4 space-y-4 text-left text-sm text-muted-foreground">
                                   <p className="text-sm text-foreground/80 dark:text-foreground/70 leading-relaxed">
                                     When you submit feedback through this form, we collect and process the following information:
                                   </p>
-                                  <ul className="list-disc list-inside space-y-2 text-sm text-foreground/80 dark:text-foreground/70 leading-relaxed pl-2 [&>li::marker]:text-blue-600 dark:[&>li::marker]:text-blue-500">
+                                  <ul className={`list-disc list-inside space-y-2 text-sm text-foreground/80 dark:text-foreground/70 leading-relaxed pl-2 transition-colors ${categoryColors.marker || "[&>li::marker]:text-blue-600 dark:[&>li::marker]:text-blue-500"}`}>
                                     <li>The title, description, and category you provide in the form</li>
                                     <li>A timestamp indicating when the feedback was submitted</li>
                                   </ul>
@@ -495,7 +589,7 @@ export default function SubmitFeedbackPage() {
                                   <p className="text-sm text-foreground/80 dark:text-foreground/70 font-medium leading-relaxed">
                                     Please avoid sharing any personal or sensitive information in your feedback, as it will be visible to our team members who review submissions.
                                   </p>
-                                </SheetDescription>
+                                </div>
                               </SheetHeader>
                             </SheetContent>
                           </Sheet>
@@ -511,11 +605,11 @@ export default function SubmitFeedbackPage() {
                             <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
                               <DialogHeader>
                                 <DialogTitle className="text-xl font-semibold">Privacy Information</DialogTitle>
-                                <DialogDescription className="pt-4 space-y-4 text-left">
+                                <div className="pt-4 space-y-4 text-left text-sm text-muted-foreground">
                                   <p className="text-sm text-foreground/80 dark:text-foreground/70 leading-relaxed">
                                     When you submit feedback through this form, we collect and process the following information:
                                   </p>
-                                  <ul className="list-disc list-inside space-y-2 text-sm text-foreground/80 dark:text-foreground/70 leading-relaxed pl-2 [&>li::marker]:text-blue-600 dark:[&>li::marker]:text-blue-500">
+                                  <ul className={`list-disc list-inside space-y-2 text-sm text-foreground/80 dark:text-foreground/70 leading-relaxed pl-2 transition-colors ${categoryColors.marker || "[&>li::marker]:text-blue-600 dark:[&>li::marker]:text-blue-500"}`}>
                                     <li>The title, description, and category you provide in the form</li>
                                     <li>A timestamp indicating when the feedback was submitted</li>
                                   </ul>
@@ -525,7 +619,7 @@ export default function SubmitFeedbackPage() {
                                   <p className="text-sm text-foreground/80 dark:text-foreground/70 font-medium leading-relaxed">
                                     Please avoid sharing any personal or sensitive information in your feedback, as it will be visible to our team members who review submissions.
                                   </p>
-                                </DialogDescription>
+                                </div>
                               </DialogHeader>
                             </DialogContent>
                           </Dialog>
@@ -537,7 +631,7 @@ export default function SubmitFeedbackPage() {
 
                 <Button
                   type="submit"
-                  className="h-11 px-6 bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+                  className={`h-11 px-6 transition-all duration-200 ease-in-out ${categoryColors.buttonText || "text-white"} ${categoryColors.bg}`}
                   style={{ borderRadius: '0.5rem', marginTop: '1.3rem' }}
                   disabled={isSubmitting}
                 >

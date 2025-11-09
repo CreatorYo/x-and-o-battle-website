@@ -171,9 +171,18 @@ export async function POST(request: NextRequest) {
       embedFields.push(descriptionField);
     }
 
+    let embedColor: number;
+    if (category === "Bug Report") {
+      embedColor = 16731983;
+    } else if (category === "Feature Request") {
+      embedColor = 14067215;
+    } else {
+      embedColor = 6331898;
+    }
+
     const embed: any = {
       title: "New Feedback Submission",
-      color: category === "Bug Report" ? 15158332 : category === "Feature Request" ? 3066993 : 3447003,
+      color: embedColor,
       fields: embedFields,
       timestamp: new Date().toISOString(),
       footer: {
