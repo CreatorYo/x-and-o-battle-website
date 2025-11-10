@@ -160,11 +160,15 @@ html {
 
   .submit-feedback-page input,
   .submit-feedback-page textarea {
-    caret-color: black;
+    caret-color: black !important;
+    -webkit-text-fill-color: currentColor;
   }
 
+  html.dark .submit-feedback-page input,
+  html.dark .submit-feedback-page textarea,
   .dark .submit-feedback-page input,
   .dark .submit-feedback-page textarea {
-    caret-color: white;
+    caret-color: white !important;
+    -webkit-text-fill-color: currentColor;
   }
 }
