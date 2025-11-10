@@ -40,7 +40,13 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { useToast } from "@/hooks/use-toast";
-import { Loader, ArrowRight, Bug, Lightbulb, MessageSquare, Smartphone, Globe, Layers } from "lucide-react";
+import { Loader, ArrowRight, Bug, Lightbulb, MessageSquare, Smartphone, Globe, Layers, Info } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const isOnlyWhitespace = (str: string): boolean => {
   if (!str || str.length === 0) return true;
@@ -421,7 +427,19 @@ export default function SubmitFeedbackPage() {
                         render={({ field }) => (
                           <FormItem>
                               <div className="flex justify-between items-center mb-2">
-                                <FormLabel className="text-sm font-medium">Device (optional)</FormLabel>
+                                <div className="flex items-center gap-2">
+                                  <FormLabel className="text-sm font-medium">Device (optional)</FormLabel>
+                                  <TooltipProvider>
+                                    <Tooltip>
+                                      <TooltipTrigger asChild>
+                                        <Info className="h-4 w-4 text-muted-foreground hover:text-foreground transition-colors cursor-help" />
+                                      </TooltipTrigger>
+                                      <TooltipContent className="border-border/60 dark:border-border/40 bg-neutral-200 dark:bg-neutral-900 shadow-lg px-3 py-2 rounded-lg">
+                                        <p className="max-w-xs text-sm leading-relaxed">This may help us if there was a crash or UI scaling issue.</p>
+                                      </TooltipContent>
+                                    </Tooltip>
+                                  </TooltipProvider>
+                                </div>
                                 {focusedField === "device" && (() => {
                                   const length = field.value?.length || 0;
                                   const maxLength = 50;
