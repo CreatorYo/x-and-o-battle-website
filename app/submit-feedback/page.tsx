@@ -40,7 +40,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { useToast } from "@/hooks/use-toast";
-import { Loader, ArrowRight, Bug, Lightbulb, MessageSquare, Smartphone, Globe, Layers, Info, AlertTriangle } from "lucide-react";
+import { Loader, ArrowRight, Bug, Lightbulb, MessageSquare, Smartphone, Globe, Layers, Info } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -84,8 +84,6 @@ export default function SubmitFeedbackPage() {
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { toast } = useToast();
-
-  const isFeedbackClosed = process.env.NEXT_PUBLIC_FeedbackClosed === 'true';
 
   const form = useForm<FeedbackFormValues>({
     resolver: zodResolver(feedbackSchema),
@@ -183,29 +181,25 @@ export default function SubmitFeedbackPage() {
   }, [isSheetOpen, isDialogOpen]);
 
   useEffect(() => {
-    const preventScrollLock = () => {
+    const observer = new MutationObserver(() => {
       const body = document.body;
-      if (body.style.overflow === 'hidden') {
+      const hasSelectOpen = document.querySelector('[data-radix-select-content]');
+      
+      if (hasSelectOpen && body.style.overflow === 'hidden') {
         body.style.overflow = 'auto';
         body.style.paddingRight = '0';
+        if (body.hasAttribute('data-scroll-locked')) {
+          body.removeAttribute('data-scroll-locked');
+        }
       }
-      if (body.hasAttribute('data-scroll-locked')) {
-        body.removeAttribute('data-scroll-locked');
-      }
-    };
-
-    const interval = setInterval(preventScrollLock, 100);
-    const observer = new MutationObserver(preventScrollLock);
+    });
     
     observer.observe(document.body, {
       attributes: true,
       attributeFilter: ['style', 'data-scroll-locked'],
     });
 
-    return () => {
-      clearInterval(interval);
-      observer.disconnect();
-    };
+    return () => observer.disconnect();
   }, []);
 
 
@@ -272,30 +266,6 @@ export default function SubmitFeedbackPage() {
       setIsSubmitting(false);
     }
   };
-
-  if (isFeedbackClosed) {
-    return (
-      <main className="min-h-screen submit-feedback-page flex flex-col">
-        <Navbar />
-        <div className="container mx-auto px-4 pt-24 pb-20 max-w-2xl md:pt-40 flex-1 flex items-center justify-center">
-          <div className="space-y-8 text-center">
-            <div className="space-y-3">
-              <div className="flex justify-center mb-4">
-                <AlertTriangle className="h-12 w-12 text-yellow-500 dark:text-yellow-400" />
-              </div>
-              <h1 className="text-4xl md:text-5xl font-bold tracking-tight">
-                Feedback Unavailable
-              </h1>
-              <p className="text-base text-muted-foreground">
-                We're temporarily pausing feedback submissions. Please check back soon, and thank you for your patience!
-              </p>
-            </div>
-          </div>
-        </div>
-        <Footer />
-      </main>
-    );
-  }
 
   return (
     <main className="min-h-screen submit-feedback-page">
