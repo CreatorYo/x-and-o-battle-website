@@ -84,15 +84,7 @@ export default function SubmitFeedbackPage() {
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isTooltipOpen, setIsTooltipOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
   const { toast } = useToast();
-
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile('ontouchstart' in window || navigator.maxTouchPoints > 0);
-    };
-    checkMobile();
-  }, []);
 
   const form = useForm<FeedbackFormValues>({
     resolver: zodResolver(feedbackSchema),
@@ -438,48 +430,25 @@ export default function SubmitFeedbackPage() {
                               <div className="flex justify-between items-center mb-2">
                                 <div className="flex items-center gap-2">
                                   <FormLabel className="text-sm font-medium">Device (optional)</FormLabel>
-                                  <TooltipProvider delayDuration={isMobile ? 0 : 700}>
-                                    <Tooltip 
-                                      open={isTooltipOpen} 
-                                      onOpenChange={(open) => {
-                                        // On mobile, only allow manual control via click/touch
-                                        // On desktop, allow hover behavior
-                                        if (!isMobile || open === false) {
-                                          setIsTooltipOpen(open);
-                                        }
-                                      }}
-                                      disableHoverableContent={isMobile}
-                                    >
+                                  <TooltipProvider>
+                                    <Tooltip open={isTooltipOpen} onOpenChange={setIsTooltipOpen}>
                                       <TooltipTrigger asChild>
                                         <button
                                           type="button"
                                           onClick={(e) => {
                                             e.preventDefault();
-                                            e.stopPropagation();
                                             setIsTooltipOpen(!isTooltipOpen);
                                           }}
                                           onTouchStart={(e) => {
                                             e.preventDefault();
-                                            e.stopPropagation();
                                             setIsTooltipOpen(!isTooltipOpen);
                                           }}
-                                          onMouseEnter={(e) => {
-                                            // Prevent hover from opening tooltip on mobile
-                                            if (isMobile) {
-                                              e.preventDefault();
-                                              e.stopPropagation();
-                                            }
-                                          }}
                                           className="focus:outline-none"
-                                          style={isMobile ? { pointerEvents: 'auto' } : {}}
                                         >
                                           <Info className="h-4 w-4 text-muted-foreground hover:text-foreground transition-colors cursor-help" />
                                         </button>
                                       </TooltipTrigger>
-                                      <TooltipContent 
-                                        className="border-border/60 dark:border-border/40 bg-neutral-200 dark:bg-neutral-900 shadow-lg px-3 py-2 rounded-lg"
-                                        disableHoverableContent={isMobile}
-                                      >
+                                      <TooltipContent className="border-border/60 dark:border-border/40 bg-neutral-200 dark:bg-neutral-900 shadow-lg px-3 py-2 rounded-lg">
                                         <p className="max-w-xs text-sm leading-relaxed">This may help us if there was a crash or something didn't look right.</p>
                                       </TooltipContent>
                                     </Tooltip>
