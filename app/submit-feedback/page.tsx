@@ -430,11 +430,12 @@ export default function SubmitFeedbackPage() {
                               <div className="flex justify-between items-center mb-2">
                                 <div className="flex items-center gap-2">
                                   <FormLabel className="text-sm font-medium">Device (optional)</FormLabel>
-                                  <TooltipProvider>
+                                  <TooltipProvider delayDuration={500}>
                                     <Tooltip open={isTooltipOpen} onOpenChange={setIsTooltipOpen}>
                                       <TooltipTrigger asChild>
                                         <button
                                           type="button"
+                                          tabIndex={-1}
                                           onClick={(e) => {
                                             e.preventDefault();
                                             setIsTooltipOpen(!isTooltipOpen);
@@ -442,6 +443,9 @@ export default function SubmitFeedbackPage() {
                                           onTouchStart={(e) => {
                                             e.preventDefault();
                                             setIsTooltipOpen(!isTooltipOpen);
+                                          }}
+                                          onFocus={(e) => {
+                                            e.target.blur();
                                           }}
                                           className="focus:outline-none"
                                         >
