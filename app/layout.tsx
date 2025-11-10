@@ -62,6 +62,93 @@ export default function RootLayout({
             `,
           }}
         />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                let scrollbarVisible = false;
+                let animationFrameId = null;
+                let currentWidth = 0;
+                const EDGE_THRESHOLD = 50;
+                const TARGET_WIDTH = 10;
+                const ANIMATION_DURATION = 200;
+                
+                function setScrollbarWidth(width) {
+                  const style = document.createElement('style');
+                  style.id = 'dynamic-scrollbar-style';
+                  style.textContent = \`
+                    ::-webkit-scrollbar {
+                      width: \${width}px !important;
+                      height: \${width}px !important;
+                    }
+                  \`;
+                  
+                  const existingStyle = document.getElementById('dynamic-scrollbar-style');
+                  if (existingStyle) {
+                    existingStyle.remove();
+                  }
+                  document.head.appendChild(style);
+                }
+                
+                function animateScrollbar(targetWidth) {
+                  if (animationFrameId) {
+                    cancelAnimationFrame(animationFrameId);
+                  }
+                  
+                  const startWidth = currentWidth;
+                  const startTime = performance.now();
+                  
+                  function animate(currentTime) {
+                    const elapsed = currentTime - startTime;
+                    const progress = Math.min(elapsed / ANIMATION_DURATION, 1);
+                    
+                    const easeOut = 1 - Math.pow(1 - progress, 3);
+                    
+                    currentWidth = startWidth + (targetWidth - startWidth) * easeOut;
+                    setScrollbarWidth(currentWidth);
+                    
+                    if (progress < 1) {
+                      animationFrameId = requestAnimationFrame(animate);
+                    } else {
+                      currentWidth = targetWidth;
+                      setScrollbarWidth(currentWidth);
+                      animationFrameId = null;
+                    }
+                  }
+                  
+                  animationFrameId = requestAnimationFrame(animate);
+                }
+                
+                function updateScrollbarVisibility(e) {
+                  if (!e) {
+                    if (scrollbarVisible) {
+                      scrollbarVisible = false;
+                      animateScrollbar(0);
+                    }
+                    return;
+                  }
+                  
+                  const windowWidth = window.innerWidth;
+                  const mouseX = e.clientX;
+                  const distanceFromRight = windowWidth - mouseX;
+                  
+                  if (distanceFromRight <= EDGE_THRESHOLD && !scrollbarVisible) {
+                    scrollbarVisible = true;
+                    animateScrollbar(TARGET_WIDTH);
+                  } else if (distanceFromRight > EDGE_THRESHOLD && scrollbarVisible) {
+                    scrollbarVisible = false;
+                    animateScrollbar(0);
+                  }
+                }
+                
+                document.addEventListener('mousemove', updateScrollbarVisibility);
+                document.addEventListener('mouseleave', function() {
+                  updateScrollbarVisibility(null);
+                });
+              })();
+            `,
+          }}
+        />
       </head>
       <body className={`${inter.className} antialiased`}>
         <ThemeProvider

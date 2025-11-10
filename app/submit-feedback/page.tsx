@@ -83,6 +83,7 @@ export default function SubmitFeedbackPage() {
   const [formKey, setFormKey] = useState(0);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isTooltipOpen, setIsTooltipOpen] = useState(false);
   const { toast } = useToast();
 
   const form = useForm<FeedbackFormValues>({
@@ -179,28 +180,6 @@ export default function SubmitFeedbackPage() {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, [isSheetOpen, isDialogOpen]);
-
-  useEffect(() => {
-    const observer = new MutationObserver(() => {
-      const body = document.body;
-      const hasSelectOpen = document.querySelector('[data-radix-select-content]');
-      
-      if (hasSelectOpen && body.style.overflow === 'hidden') {
-        body.style.overflow = 'auto';
-        body.style.paddingRight = '0';
-        if (body.hasAttribute('data-scroll-locked')) {
-          body.removeAttribute('data-scroll-locked');
-        }
-      }
-    });
-    
-    observer.observe(document.body, {
-      attributes: true,
-      attributeFilter: ['style', 'data-scroll-locked'],
-    });
-
-    return () => observer.disconnect();
-  }, []);
 
 
   const onSubmit = async (data: FeedbackFormValues) => {
@@ -452,9 +431,22 @@ export default function SubmitFeedbackPage() {
                                 <div className="flex items-center gap-2">
                                   <FormLabel className="text-sm font-medium">Device (optional)</FormLabel>
                                   <TooltipProvider>
-                                    <Tooltip>
+                                    <Tooltip open={isTooltipOpen} onOpenChange={setIsTooltipOpen}>
                                       <TooltipTrigger asChild>
-                                        <Info className="h-4 w-4 text-muted-foreground hover:text-foreground transition-colors cursor-help" />
+                                        <button
+                                          type="button"
+                                          onClick={(e) => {
+                                            e.preventDefault();
+                                            setIsTooltipOpen(!isTooltipOpen);
+                                          }}
+                                          onTouchStart={(e) => {
+                                            e.preventDefault();
+                                            setIsTooltipOpen(!isTooltipOpen);
+                                          }}
+                                          className="focus:outline-none"
+                                        >
+                                          <Info className="h-4 w-4 text-muted-foreground hover:text-foreground transition-colors cursor-help" />
+                                        </button>
                                       </TooltipTrigger>
                                       <TooltipContent className="border-border/60 dark:border-border/40 bg-neutral-200 dark:bg-neutral-900 shadow-lg px-3 py-2 rounded-lg">
                                         <p className="max-w-xs text-sm leading-relaxed">This may help us if there was a crash or something didn't look right.</p>
