@@ -435,7 +435,7 @@ export default function SubmitFeedbackPage() {
                                         <Info className="h-4 w-4 text-muted-foreground hover:text-foreground transition-colors cursor-help" />
                                       </TooltipTrigger>
                                       <TooltipContent className="border-border/60 dark:border-border/40 bg-neutral-200 dark:bg-neutral-900 shadow-lg px-3 py-2 rounded-lg">
-                                        <p className="max-w-xs text-sm leading-relaxed">This may help us if there was a crash or UI scaling issue.</p>
+                                        <p className="max-w-xs text-sm leading-relaxed">This may help us if there was a crash or something didn't look right.</p>
                                       </TooltipContent>
                                     </Tooltip>
                                   </TooltipProvider>

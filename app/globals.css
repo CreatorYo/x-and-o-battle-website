@@ -99,21 +99,21 @@ html {
   }
 
   ::selection {
-    background-color: #002468;
-    color: #91B5F7;
+    background-color: #222;
+    color: #fff;
   }
   ::-moz-selection {
-    background-color: #002468;
-    color: #91B5F7;
+    background-color: #222;
+    color: #fff;
   }
 
   .light ::selection {
-    background-color: #95BAFF;
-    color: #144090;
+    background-color: #222;
+    color: #fff;
   }
   .light ::-moz-selection {
-    background-color: #95BAFF;
-    color: #144090;
+    background-color: #222;
+    color: #fff;
   }
 }
 
