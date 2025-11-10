@@ -157,4 +157,14 @@ html {
   .feature-orange ::selection {
     @apply bg-orange-500/30 text-foreground;
   }
+
+  .submit-feedback-page input,
+  .submit-feedback-page textarea {
+    caret-color: black;
+  }
+
+  .dark .submit-feedback-page input,
+  .dark .submit-feedback-page textarea {
+    caret-color: white;
+  }
 }

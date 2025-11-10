@@ -240,7 +240,7 @@ export default function SubmitFeedbackPage() {
   };
 
   return (
-    <main className="min-h-screen">
+    <main className="min-h-screen submit-feedback-page">
       <Navbar />
       <div className={`container mx-auto px-4 pt-24 pb-20 max-w-2xl ${selectedCategory === "Bug Report" ? "md:pt-32" : "md:pt-40"}`}>
         <div className="space-y-8">
