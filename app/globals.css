@@ -109,12 +109,12 @@ html {
   }
 
   .light ::selection {
-    background-color: #222;
-    color: #fff;
+    background-color: #e0e0e0;
+    color: black;
   }
   .light ::-moz-selection {
-    background-color: #222;
-    color: #fff;
+    background-color: #e0e0e0;
+    color: black;
   }
 }
 
