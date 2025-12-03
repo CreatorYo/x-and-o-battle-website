@@ -26,7 +26,6 @@ export function HeroSection() {
 
   useEffect(() => {
     setMounted(true);
-    // Detect Windows
     const userAgent = navigator.userAgent || navigator.platform || "";
     const isWindowsOS = /Win/i.test(userAgent) || /Windows/i.test(userAgent);
     setIsWindows(isWindowsOS);
@@ -37,7 +36,6 @@ export function HeroSection() {
       e.preventDefault();
       setShowDialog(true);
     }
-    // If not Windows, the link will navigate normally
   };
 
   return (
