@@ -34,12 +34,6 @@ export function FAQSection() {
   return (
     <section className="py-20 bg-background">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-4">
-          <span className="bg-secondary/80 text-sm font-medium px-3 py-1 rounded-full select-none">
-            FAQ
-          </span>
-        </div>
-        
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}

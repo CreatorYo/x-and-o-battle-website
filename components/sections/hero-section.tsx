@@ -1,19 +1,44 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Apple, ChevronRight } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 export function HeroSection() {
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const [isWindows, setIsWindows] = useState(false);
+  const [showDialog, setShowDialog] = useState(false);
 
   useEffect(() => {
     setMounted(true);
+    // Detect Windows
+    const userAgent = navigator.userAgent || navigator.platform || "";
+    const isWindowsOS = /Win/i.test(userAgent) || /Windows/i.test(userAgent);
+    setIsWindows(isWindowsOS);
   }, []);
+
+  const handleLaunchWebApp = (e: React.MouseEvent) => {
+    if (isWindows) {
+      e.preventDefault();
+      setShowDialog(true);
+    }
+    // If not Windows, the link will navigate normally
+  };
 
   return (
     <section className="relative min-h-screen flex items-center justify-center pt-24 md:pt-32 pb-16 md:pb-24 overflow-hidden bg-background">
@@ -74,18 +99,82 @@ export function HeroSection() {
               className="w-full sm:w-auto"
             >
               <Button size="lg" className="rounded-full text-base w-full sm:w-auto">
-                <Apple className="mr-2 h-5 w-5" /> Download on App Store
+                <Image src="/apple-logo.svg" alt="Apple" width={18} height={18} className="mr-2 h-[18px] w-[18px] brightness-0 invert" />
+                Download on App Store
               </Button>
             </Link>
             <Link 
               href="https://web.xoandbattle.com"
               target="_blank"
               rel="noopener noreferrer"
+              onClick={handleLaunchWebApp}
               className="group flex items-center justify-center text-base rounded-full px-4 sm:px-6 py-3 transition-opacity duration-200 hover:opacity-70 w-full sm:w-auto"
             >
               Launch web app
               <ChevronRight className="ml-2 h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />
             </Link>
+
+            <AlertDialog open={showDialog} onOpenChange={setShowDialog}>
+              <AlertDialogContent 
+                className="sm:max-w-[900px] border-zinc-950 dark:border-zinc-900 p-0 gap-0 overflow-hidden"
+                onOverlayClick={() => setShowDialog(false)}
+              >
+                <div className="flex flex-col sm:flex-row min-h-[350px] sm:min-h-[400px]">
+                  <div className="flex-1 p-6 sm:p-8 flex flex-col justify-between">
+                    <div>
+                      <AlertDialogHeader className="pb-3">
+                        <AlertDialogTitle className="text-2xl sm:text-3xl font-bold leading-tight">X&O Battle is also available on the Microsoft Store</AlertDialogTitle>
+                        <AlertDialogDescription className="text-base pt-3 leading-relaxed">
+                          Play directly within the app with same features as web, or continue to web app.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                    </div>
+                    <AlertDialogFooter className="flex-col sm:flex-row gap-3 sm:gap-3 pt-4 pb-0 px-0">
+                      <AlertDialogCancel 
+                        onClick={() => {
+                          window.open("https://web.xoandbattle.com", "_blank");
+                          setShowDialog(false);
+                        }}
+                        className="w-full sm:w-auto border-zinc-950 dark:border-zinc-900"
+                      >
+                        Continue to web app
+                      </AlertDialogCancel>
+                      <AlertDialogAction 
+                        onClick={() => {
+                          window.open("https://apps.microsoft.com/detail/9nk0184bmx07?hl=en-GB&gl=GB", "_blank");
+                          setShowDialog(false);
+                        }}
+                        className="w-full sm:w-auto flex items-center gap-2.5"
+                      >
+                        <svg className="h-4 w-4 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-13.051-1.35"/>
+                        </svg>
+                        Get on Microsoft Store
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </div>
+                  <div className="relative w-full sm:w-[450px] h-80 sm:h-full sm:flex-shrink-0 overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-l from-background via-background/50 to-transparent z-10 pointer-events-none" />
+                    <Image
+                      src="https://assets.creatoryogames.com/xobattle-assets/X%26O_Battle_Web_Board_Screenshot.png"
+                      alt="X&O Battle"
+                      fill
+                      className="object-cover scale-110"
+                      style={{
+                        maskImage: 'radial-gradient(ellipse 80% 100% at right center, black 40%, transparent 100%)',
+                        WebkitMaskImage: 'radial-gradient(ellipse 80% 100% at right center, black 40%, transparent 100%)',
+                      }}
+                    />
+                    <div 
+                      className="absolute inset-0 pointer-events-none"
+                      style={{
+                        background: 'radial-gradient(ellipse 100% 120% at 70% 50%, transparent 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.6) 100%)',
+                      }}
+                    />
+                  </div>
+                </div>
+              </AlertDialogContent>
+            </AlertDialog>
           </motion.div>
         </motion.div>
       </div>
