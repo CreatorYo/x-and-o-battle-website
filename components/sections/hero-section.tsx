@@ -117,7 +117,7 @@ export function HeroSection() {
                 className="sm:max-w-[900px] border-zinc-950 dark:border-zinc-900 p-0 gap-0 overflow-hidden"
                 onOverlayClick={() => setShowDialog(false)}
               >
-                <div className="flex flex-col sm:flex-row min-h-[350px] sm:min-h-[400px]">
+                <div className="flex flex-col sm:flex-row min-h-[400px] sm:min-h-[450px]">
                   <div className="flex-1 p-6 sm:p-8 flex flex-col justify-between">
                     <div>
                       <AlertDialogHeader className="pb-3">
