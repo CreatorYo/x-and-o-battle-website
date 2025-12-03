@@ -97,7 +97,7 @@ export function HeroSection() {
               className="w-full sm:w-auto"
             >
               <Button size="lg" className="rounded-full text-base w-full sm:w-auto">
-                <Image src="/apple-logo.svg" alt="Apple" width={18} height={18} className="mr-2 h-[18px] w-[18px] brightness-0 invert" />
+                <Image src="/svgs/apple-logo.svg" alt="Apple" width={18} height={18} className="mr-2 h-[18px] w-[18px] brightness-0 invert" />
                 Download on App Store
               </Button>
             </Link>
@@ -114,10 +114,10 @@ export function HeroSection() {
 
             <AlertDialog open={showDialog} onOpenChange={setShowDialog}>
               <AlertDialogContent 
-                className="sm:max-w-[900px] border-zinc-950 dark:border-zinc-900 p-0 gap-0 overflow-hidden"
+                className="sm:max-w-[900px] border-zinc-300 dark:border-zinc-900 p-0 gap-0 overflow-hidden"
                 onOverlayClick={() => setShowDialog(false)}
               >
-                <div className="flex flex-col sm:flex-row min-h-[400px] sm:min-h-[450px]">
+                <div className="flex flex-col sm:flex-row min-h-[380px] sm:min-h-[430px]">
                   <div className="flex-1 p-6 sm:p-8 flex flex-col justify-between">
                     <div>
                       <AlertDialogHeader className="pb-3">
@@ -133,7 +133,7 @@ export function HeroSection() {
                           window.open("https://web.xoandbattle.com", "_blank");
                           setShowDialog(false);
                         }}
-                        className="w-full sm:w-auto border-zinc-950 dark:border-zinc-900"
+                        className="w-full sm:w-auto border-zinc-300 dark:border-zinc-900"
                       >
                         Continue to web app
                       </AlertDialogCancel>
@@ -151,7 +151,7 @@ export function HeroSection() {
                       </AlertDialogAction>
                     </AlertDialogFooter>
                   </div>
-                  <div className="relative w-full sm:w-[450px] h-80 sm:h-full sm:flex-shrink-0 overflow-hidden">
+                  <div className="hidden sm:block relative w-full sm:w-[450px] h-80 sm:h-full sm:flex-shrink-0 overflow-hidden">
                     <div className="absolute inset-0 bg-gradient-to-l from-background via-background/50 to-transparent z-10 pointer-events-none" />
                     <Image
                       src="https://assets.creatoryogames.com/xobattle-assets/X%26O_Battle_Web_Board_Screenshot.png"
@@ -164,7 +164,7 @@ export function HeroSection() {
                       }}
                     />
                     <div 
-                      className="absolute inset-0 pointer-events-none"
+                      className="absolute inset-0 pointer-events-none dark:block hidden"
                       style={{
                         background: 'radial-gradient(ellipse 100% 120% at 70% 50%, transparent 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.6) 100%)',
                       }}

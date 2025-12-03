@@ -50,7 +50,7 @@ export function DownloadSection() {
               >
                 <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 <span className="relative flex items-center">
-                  <Image src="/apple-logo.svg" alt="Apple" width={18} height={18} className="mr-3 h-[18px] w-[18px] brightness-0 invert" />
+                  <Image src="/svgs/apple-logo.svg" alt="Apple" width={18} height={18} className="mr-3 h-[18px] w-[18px] brightness-0 dark:invert" />
                   <span className="font-medium">Download on App Store</span>
                 </span>
               </Button>

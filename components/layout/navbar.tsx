@@ -5,7 +5,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
-import { Apple, Menu, X, Mail } from "lucide-react"
+import { Menu, X, Mail } from "lucide-react"
 import { MobileThemeSwitcher } from "@/components/mobile-theme-switcher"
 
 const BANNER_CONFIG = {
@@ -151,7 +151,7 @@ export function Navbar() {
 
       <header
         className={cn(
-          "fixed left-0 right-0 z-[40] transition-all duration-500 bg-background/70 navigation-bar-backdrop-filter",
+          "fixed left-0 right-0 z-[40] transition-all duration-500 bg-background/70 backdrop-blur-sm navigation-bar-backdrop-filter",
           showBanner ? "top-[60px] md:top-[48px]" : "top-0",
           isScrolled ? "shadow-sm" : "",
         )}
@@ -191,7 +191,8 @@ export function Navbar() {
                 className="select-none"
               >
                 <Button className="rounded-full bg-black dark:bg-white text-white dark:text-black hover:bg-black/90 dark:hover:bg-white/90">
-                  <Apple className="mr-2 h-4 w-4" /> Download
+                  <Image src="/svgs/apple-logo.svg" alt="Apple" width={16} height={16} className="mr-2 h-4 w-4 brightness-0 invert dark:invert-0" />
+                  Download
                 </Button>
               </Link>
             </div>
@@ -239,7 +240,8 @@ export function Navbar() {
                 className="select-none"
               >
                 <Button className="w-full rounded-full bg-black dark:bg-white text-white dark:text-black hover:bg-black/90 dark:hover:bg-white/90 h-12 text-base">
-                  <Apple className="mr-2 h-5 w-5" /> Download
+                  <Image src="/svgs/apple-logo.svg" alt="Apple" width={20} height={20} className="mr-2 h-5 w-5 brightness-0 invert dark:invert-0" />
+                  Download
                 </Button>
               </Link>
             </div>
