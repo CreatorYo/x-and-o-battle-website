@@ -8,6 +8,7 @@ const nextConfig = {
     config.cache = false;
     return config;
   },
+  turbopack: {},
 };
 
 module.exports = nextConfig;
