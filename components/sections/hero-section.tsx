@@ -133,7 +133,7 @@ export function HeroSection() {
                           window.open("https://web.xoandbattle.com", "_blank");
                           setShowDialog(false);
                         }}
-                        className="w-full sm:w-auto border-zinc-300 dark:border-zinc-900"
+                        className="w-full sm:w-auto border-zinc-300 dark:border-zinc-900 hover:bg-zinc-300 dark:hover:bg-zinc-900"
                       >
                         Continue to web app
                       </AlertDialogCancel>
