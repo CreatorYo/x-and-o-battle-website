@@ -73,7 +73,7 @@ export function HeroSection() {
             transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
             className="text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.2] mb-6"
           >
-            Introducing2 <span className="text-primary">X&O Battle.</span> <br className="hidden md:block" />
+            Introducing <span className="text-primary">X&O Battle.</span> <br className="hidden md:block" />
             Built to match your style.
           </motion.h1>
           <motion.p 
