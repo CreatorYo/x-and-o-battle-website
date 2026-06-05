@@ -1,14 +1,20 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  eslint: {
-    ignoreDuringBuilds: true,
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'assets.creatoryogames.com',
+      },
+    ],
   },
-  images: { unoptimized: true },
   webpack: (config, { isServer }) => {
     config.cache = false;
     return config;
   },
-  turbopack: {},
+  turbopack: {
+    root: __dirname,
+  },
 };
 
 module.exports = nextConfig;

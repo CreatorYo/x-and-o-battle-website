@@ -164,6 +164,8 @@ export function Navbar() {
                   src="https://assets.creatoryogames.com/xobattle-assets/XO_Battle_Logo_Transparent.png"
                   alt="X&O Battle Logo"
                   fill
+                  priority
+                  sizes="32px"
                   draggable="false"
                   className="object-cover pointer-events-none"
                 />

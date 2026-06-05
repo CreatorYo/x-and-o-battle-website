@@ -157,6 +157,7 @@ export function HeroSection() {
                       src="https://assets.creatoryogames.com/xobattle-assets/X%26O_Battle_Web_Board_Screenshot.png"
                       alt="X&O Battle"
                       fill
+                      sizes="(max-width: 640px) 100vw, 450px"
                       className="object-cover scale-110"
                       style={{
                         maskImage: 'radial-gradient(ellipse 80% 100% at right center, black 40%, transparent 100%)',

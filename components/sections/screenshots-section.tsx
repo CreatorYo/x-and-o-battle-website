@@ -58,7 +58,7 @@ export function ScreenshotsSection() {
         <div className="max-w-sm mx-auto">
           <div className="relative">
             <div 
-              className="overflow-hidden rounded-[2.5rem] shadow-2xl border border-border/50 bg-secondary cursor-zoom-in"
+              className="relative overflow-hidden rounded-[2.5rem] shadow-2xl border border-border/50 bg-secondary cursor-zoom-in"
               onMouseEnter={() => setIsHovering(true)}
               onMouseLeave={() => setIsHovering(false)}
               onClick={() => {

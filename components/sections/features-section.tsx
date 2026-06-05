@@ -82,7 +82,7 @@ export function FeaturesSection() {
   const opacity = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0, 1, 1, 0.8]);
 
   return (
-    <section id="features" ref={ref} className="py-20">
+    <section id="features" ref={ref} className="relative py-20">
       <motion.div 
         style={{ y, opacity }}
         className="container mx-auto px-4"
@@ -108,7 +108,7 @@ export function FeaturesSection() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
               viewport={{ once: true }}
-              className={`rounded-xl p-6 border border-border/50 overflow-hidden relative group ${feature.selectionClass} ${feature.gradientClass}`}
+              className={`rounded-xl p-6 border border-border/50 overflow-hidden relative group shadow-[inset_0_1px_1px_rgba(255,255,255,0.4)] dark:shadow-[inset_0_1px_1px_rgba(255,255,255,0.15)] ${feature.selectionClass} ${feature.gradientClass}`}
               onMouseMove={(e) => {
                 const rect = e.currentTarget.getBoundingClientRect();
                 setMousePosition({
