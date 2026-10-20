@@ -1,52 +1,35 @@
-"use client";
-
 import Link from "next/link";
 import { Mail } from "lucide-react";
-import { FooterThemeSwitcher } from "@/components/footer-theme-switcher";
+import { ThemeToggle } from "@/components/theme-toggle";
+import { PRIVACY_URL, SUPPORT_EMAIL } from "@/lib/links";
+
+const linkClass = "text-muted-foreground transition-colors hover:text-foreground";
 
 export function Footer() {
   return (
-    <footer className="bg-background py-16">
-      <div className="container mx-auto px-4">
-        <div className="max-w-6xl mx-auto">
-          <div className="flex flex-wrap gap-6 justify-center mb-16">
-            <Link 
-              href="/#features" 
-              className="select-none px-4 py-2 rounded-full text-foreground/60 hover:text-foreground hover:bg-foreground/5 transition-colors"
-            >
-              Features
-            </Link>
-            <Link 
-              href="/#screenshots" 
-              className="select-none px-4 py-2 rounded-full text-foreground/60 hover:text-foreground hover:bg-foreground/5 transition-colors"
-            >
-              Screenshots
-            </Link>
-            <Link 
-              href="https://policies.creatoryogames.com/x-and-o-battle-policies-game/privacy-policy"
-              className="select-none px-4 py-2 rounded-full text-foreground/60 hover:text-foreground hover:bg-foreground/5 transition-colors"
-            >
-              Privacy
-            </Link>
-            <Link 
-              href="/submit-feedback"
-              className="select-none px-4 py-2 rounded-full text-foreground/60 hover:text-foreground hover:bg-foreground/5 transition-colors"
-            >
+    <footer className="border-t border-border">
+      <div className="shell flex flex-col gap-6 py-10 text-[13px] sm:flex-row sm:items-center sm:justify-between">
+        <p className="text-muted-foreground">© {new Date().getFullYear()} X&O Battle. All rights reserved.</p>
+
+        <div className="flex flex-wrap items-center gap-x-6 gap-y-4">
+          <nav aria-label="Footer" className="flex flex-wrap gap-x-6 gap-y-2">
+            <a href={PRIVACY_URL} target="_blank" rel="noopener noreferrer" className={linkClass}>
+              Privacy Policy
+            </a>
+            <Link href="/submit-feedback" className={linkClass}>
               Feedback
             </Link>
-          </div>
-
-          <div className="flex justify-between items-center pt-8 border-t border-foreground/10">
-            <p className="text-foreground/60 text-sm">© {new Date().getFullYear()} X&O Battle. All rights reserved.</p>
-            <div className="flex items-center gap-4">
-              <FooterThemeSwitcher />
-              <a title="Email Support"
-                href="mailto:help@creatoryogames.com"
-                className="select-none text-foreground/60 hover:text-foreground transition-colors"
-              >
-                <Mail className="h-5 w-5" />
-              </a>
-            </div>
+          </nav>
+          <div className="flex items-center gap-4">
+            <ThemeToggle />
+            <a
+              href={`mailto:${SUPPORT_EMAIL}`}
+              title="Email Support"
+              aria-label="Email Support"
+              className="select-none text-foreground/60 transition-colors hover:text-foreground"
+            >
+              <Mail className="size-5" />
+            </a>
           </div>
         </div>
       </div>

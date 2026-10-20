@@ -1,166 +1,69 @@
-import './globals.css'
-import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
-import { ThemeProvider } from '@/components/theme-provider'
-import { Toaster } from '@/components/ui/toaster'
-import ClientTitleUpdater from './ClientTitleUpdater'
+import "./globals.css";
+import type { Metadata, Viewport } from "next";
+import type { ReactNode } from "react";
+import { Inter, Outfit } from "next/font/google";
+import { ThemeProvider } from "next-themes";
+import { APP_ICON_URL, LOGO_URL } from "@/lib/links";
 
-const inter = Inter({ subsets: ['latin'] })
+const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" });
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+
+const description = "X&O Battle is a sleek take on tic-tac-toe, with themes, an AI mode and achievements.";
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#000000" },
+  ],
+};
 
 export const metadata: Metadata = {
-  title: 'X&O Battle',
-  description: 'X&O Battle is a sleek take on tic-tac-toe with customisability and more.',
+  title: {
+    default: "X&O Battle",
+    template: "%s | X&O Battle",
+  },
+  description,
+  keywords: ["Tic Tac Toe", "X&O Battle", "X and O Battle", "2 Player Game"],
   icons: {
-    icon: 'https://assets.creatoryogames.com/xobattle-assets/XO_Battle_Logo.png',
-    apple: 'https://assets.creatoryogames.com/xobattle-assets/XO_Battle_Logo.png',
+    icon: LOGO_URL,
+    apple: APP_ICON_URL,
+  },
+  itunes: {
+    appId: "6745736399",
+  },
+  openGraph: {
+    type: "website",
+    siteName: "X&O Battle",
+    title: "X&O Battle",
+    description,
+    images: [APP_ICON_URL],
+  },
+  twitter: {
+    card: "summary",
+    title: "X&O Battle",
+    description,
+    images: [APP_ICON_URL],
   },
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning data-scroll-behavior="smooth">
-      <head>
-        <link rel="icon" href="https://assets.creatoryogames.com/xobattle-assets/XO_Battle_Logo.png"/>
-        <link rel="apple-touch-icon" href="https://assets.creatoryogames.com/xobattle-assets/XO_Battle_Logo.png"/>
-        <meta name="keywords" content="Tic Tac Toe, X&O Battle, X and O Battle, 2 Player Game"/>
-        <meta name="apple-itunes-app" content="app-id=6745736399"/>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function() {
-                function setTheme() {
-                  const theme = localStorage.getItem('theme');
-                  const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-                  
-                  if (theme === 'dark' || (!theme && systemDark)) {
-                    document.documentElement.classList.add('dark');
-                  }
-                  
-                  document.documentElement.style.colorScheme = theme === 'dark' || (!theme && systemDark) ? 'dark' : 'light';
-                }
-                
-                setTheme();
-                
-                document.documentElement.style.display = 'none';
-                window.addEventListener('DOMContentLoaded', function() {
-                  document.documentElement.style.display = '';
-                });
-              })();
-            `,
-          }}
-        />
-        <style
-          dangerouslySetInnerHTML={{
-            __html: `
-              :root { color-scheme: light; }
-              :root.dark { color-scheme: dark; }
-              :root, body { background: hsl(var(--background)); }
-            `,
-          }}
-        />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function() {
-                let scrollbarVisible = false;
-                let animationFrameId = null;
-                let currentWidth = 0;
-                const EDGE_THRESHOLD = 50;
-                const TARGET_WIDTH = 10;
-                const ANIMATION_DURATION = 200;
-                
-                function setScrollbarWidth(width) {
-                  const style = document.createElement('style');
-                  style.id = 'dynamic-scrollbar-style';
-                  style.textContent = \`
-                    ::-webkit-scrollbar {
-                      width: \${width}px !important;
-                      height: \${width}px !important;
-                    }
-                  \`;
-                  
-                  const existingStyle = document.getElementById('dynamic-scrollbar-style');
-                  if (existingStyle) {
-                    existingStyle.remove();
-                  }
-                  document.head.appendChild(style);
-                }
-                
-                function animateScrollbar(targetWidth) {
-                  if (animationFrameId) {
-                    cancelAnimationFrame(animationFrameId);
-                  }
-                  
-                  const startWidth = currentWidth;
-                  const startTime = performance.now();
-                  
-                  function animate(currentTime) {
-                    const elapsed = currentTime - startTime;
-                    const progress = Math.min(elapsed / ANIMATION_DURATION, 1);
-                    
-                    const easeOut = 1 - Math.pow(1 - progress, 3);
-                    
-                    currentWidth = startWidth + (targetWidth - startWidth) * easeOut;
-                    setScrollbarWidth(currentWidth);
-                    
-                    if (progress < 1) {
-                      animationFrameId = requestAnimationFrame(animate);
-                    } else {
-                      currentWidth = targetWidth;
-                      setScrollbarWidth(currentWidth);
-                      animationFrameId = null;
-                    }
-                  }
-                  
-                  animationFrameId = requestAnimationFrame(animate);
-                }
-                
-                function updateScrollbarVisibility(e) {
-                  if (!e) {
-                    if (scrollbarVisible) {
-                      scrollbarVisible = false;
-                      animateScrollbar(0);
-                    }
-                    return;
-                  }
-                  
-                  const windowWidth = window.innerWidth;
-                  const mouseX = e.clientX;
-                  const distanceFromRight = windowWidth - mouseX;
-                  
-                  if (distanceFromRight <= EDGE_THRESHOLD && !scrollbarVisible) {
-                    scrollbarVisible = true;
-                    animateScrollbar(TARGET_WIDTH);
-                  } else if (distanceFromRight > EDGE_THRESHOLD && scrollbarVisible) {
-                    scrollbarVisible = false;
-                    animateScrollbar(0);
-                  }
-                }
-                
-                document.addEventListener('mousemove', updateScrollbarVisibility);
-                document.addEventListener('mouseleave', function() {
-                  updateScrollbarVisibility(null);
-                });
-              })();
-            `,
-          }}
-        />
-      </head>
-      <body className={`${inter.className} antialiased`}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-          storageKey="theme"
-        >
-          <ClientTitleUpdater />
+    <html
+      lang="en"
+      suppressHydrationWarning
+      data-scroll-behavior="smooth"
+      className={`${outfit.variable} ${inter.variable}`}
+    >
+      <body className="antialiased">
+        <noscript>
+          <style>
+            {
+              "[data-reveal] .reveal-word, [data-reveal] .reveal-item { opacity: 1; filter: none; } [data-reveal] .reveal-strike { stroke-dashoffset: 0; }"
+            }
+          </style>
+        </noscript>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange storageKey="theme">
           {children}
-          <Toaster />
         </ThemeProvider>
       </body>
     </html>

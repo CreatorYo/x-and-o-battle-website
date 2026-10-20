@@ -1,93 +1,109 @@
-"use client";
-
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown } from "lucide-react";
+import type { ReactNode } from "react";
 import Link from "next/link";
+import * as AccordionPrimitive from "@radix-ui/react-accordion";
+import { ChevronDown } from "lucide-react";
+import { Reveal } from "@/components/reveal";
+import { BlurWords, revealIndex } from "@/components/blur-words";
+import { APP_STORE_URL, MICROSOFT_STORE_URL, PRIVACY_URL, SUPPORT_EMAIL, WEB_APP_URL } from "@/lib/links";
+
+const linkClass = "font-medium text-mark-x hover:underline hover:underline-offset-4";
+
+function ExternalLink({ href, children }: { href: string; children: ReactNode }) {
+  return (
+    <a href={href} target="_blank" rel="noopener noreferrer" className={linkClass}>
+      {children}
+    </a>
+  );
+}
 
 const faqs = [
-   {
+  {
+    question: "Where can I play X&O Battle?",
+    answer: (
+      <>
+        On iPhone, download it from the <ExternalLink href={APP_STORE_URL}>App Store</ExternalLink>. On Windows, get it
+        from the <ExternalLink href={MICROSOFT_STORE_URL}>Microsoft Store</ExternalLink>. Or play straight away in your
+        browser at <ExternalLink href={WEB_APP_URL}>web.xoandbattle.com</ExternalLink>, with nothing to install.
+      </>
+    ),
+  },
+  {
     question: "How is my privacy protected?",
-    answer: <>We take your privacy seriously. The game contains no advertisements and does not track or sell your data. <Link href="https://policies.creatoryogames.com/x-and-o-battle-policies-game/privacy-policy" className="text-blue-700 dark:text-blue-300 hover:underline" target="_blank" rel="noopener noreferrer">Learn more</Link></>
+    answer: (
+      <>
+        There are no ads, and nothing you do in the game is tracked or sold. If you send us feedback, we only receive
+        what you enter in the form and the time it was sent.{" "}
+        <ExternalLink href={PRIVACY_URL}>Read our privacy policy</ExternalLink> for the full details.
+      </>
+    ),
   },
-   {
+  {
     question: "Can I customise the look of the game?",
-    answer: "Yes, you can personalise your experience by choosing from unique themes, presets and accent colours to suit your style."
+    answer:
+      "Yes. There are five built-in themes to choose from: Classic, Modern, Neon, Minimal and Retro. You can also pick the accent colours you like and save them as your own preset, ready to switch back to at any time.",
   },
-    {
+  {
     question: "Is my game data saved automatically?",
-    answer: "Yes, your achievements and other data are saved automatically, ensuring your progress is never lost within the app."
+    answer:
+      "Yes. Your achievements, settings and custom presets save as you play. There's nothing to set up, and everything is right where you left it the next time you open the game.",
   },
-   {
+  {
     question: "Are achievements tracked within the game?",
-    answer: "Yes, the game includes an achievement system that allows you to monitor your progress."
+    answer:
+      "Yes. Achievements unlock as you play, and you can check which ones you've earned and how close you are to the rest at any time.",
   },
   {
     question: "Can I play against other people or only the computer?",
-    answer: "You can challenge  a friend or take on an AI opponent. The AI difficulty and response time are both customisable."
-  }
+    answer:
+      "Both. In Two Player mode, you and a friend take turns as X and O on the same device. In AI Mode you play against the computer, and you can adjust both its difficulty and how quickly it responds.",
+  },
 ];
 
 export function FAQSection() {
-  const [openIndex, setOpenIndex] = useState<number | null>(null);
-
   return (
-    <section className="py-20 bg-background">
-      <div className="container mx-auto px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
-          className="text-center mb-16"
-        >
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">
-            Frequently Asked Questions
-          </h2>
-          <p className="text-xl text-muted-foreground">
-            Find answers to common questions about X&O Battle
-          </p>
-        </motion.div>
+    <section id="faq" data-nav-tone="band" className="scroll-mt-16 bg-band pb-28 pt-24 sm:pb-36 sm:pt-28">
+      <div className="shell">
+        <div className="mx-auto max-w-[760px]">
+          <Reveal>
+            <h2 className="text-center font-display text-[36px] font-semibold leading-[1.05] tracking-[-0.035em] sm:text-[52px]">
+              <BlurWords text="Questions and answers" />
+            </h2>
+          </Reveal>
 
-        <div className="max-w-3xl mx-auto space-y-4">
-          {faqs.map((faq, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              viewport={{ once: true }}
-              className={`border-border/40 border-b ${index === faqs.length - 1 ? 'border-b-0' : ''}`}
-            >
-              <div className="py-6">
-                <button
-                  onClick={() => setOpenIndex(openIndex === index ? null : index)}
-                  className="w-full text-left focus:outline-none group flex justify-between items-center"
+          <Reveal>
+            <AccordionPrimitive.Root type="single" collapsible className="mt-14 sm:mt-16">
+              {faqs.map((faq, i) => (
+                <AccordionPrimitive.Item
+                  key={faq.question}
+                  value={faq.question}
+                  className="reveal-item border-b border-border last:border-b-0"
+                  style={revealIndex(i)}
                 >
-                  <h3 className="font-medium text-lg pr-8">{faq.question}</h3>
-                  <ChevronDown 
-                   className={`h-5 w-5 transition-transform duration-200 flex-shrink-0 ${openIndex === index ? 'rotate-180' : ''}`} 
-                   style={{ color: '#0a84ff' }}
-                  />
-                </button>
-                <AnimatePresence>
-                  {openIndex === index && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.2 }}
-                      className="overflow-hidden"
-                    >
-                      <p className="mt-4 text-muted-foreground pr-8">
-                        {faq.answer}
-                      </p>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            </motion.div>
-          ))}
+                  <AccordionPrimitive.Header>
+                    <AccordionPrimitive.Trigger className="group flex w-full items-center justify-between gap-6 rounded-sm py-6 text-left focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring">
+                      <span className="font-display text-lg font-medium tracking-[-0.01em] sm:text-xl">{faq.question}</span>
+                      <ChevronDown className="size-5 shrink-0 text-muted-foreground transition-transform duration-300 group-data-[state=open]:rotate-180" />
+                    </AccordionPrimitive.Trigger>
+                  </AccordionPrimitive.Header>
+                  <AccordionPrimitive.Content className="overflow-hidden data-[state=closed]:animate-faq-close data-[state=open]:animate-faq-open">
+                    <p className="pb-6 pr-10 text-[17px] leading-relaxed text-muted-foreground">{faq.answer}</p>
+                  </AccordionPrimitive.Content>
+                </AccordionPrimitive.Item>
+              ))}
+            </AccordionPrimitive.Root>
+
+            <p className="reveal-item mt-10 text-center text-muted-foreground" style={revealIndex(faqs.length)}>
+              Still have a question? Email{" "}
+              <a href={`mailto:${SUPPORT_EMAIL}`} className={linkClass}>
+                {SUPPORT_EMAIL}
+              </a>{" "}
+              or{" "}
+              <Link href="/submit-feedback" className={linkClass}>
+                send feedback
+              </Link>
+              .
+            </p>
+          </Reveal>
         </div>
       </div>
     </section>

@@ -1,254 +1,134 @@
 import { NextRequest, NextResponse } from "next/server";
+import { DESCRIPTION_MAX, DEVICE_MAX, TITLE_MAX, isFeedbackCategory, isFeedbackPlatform } from "@/lib/feedback";
+import { createRateLimiter } from "@/lib/rate-limit";
+import { isBlank } from "@/lib/text";
+import { buildFeedbackEmbed, isValidWebhookUrl, sanitizeForDiscord, sendEmbed } from "./discord";
 
-export const dynamic = 'force-dynamic';
-export const runtime = 'nodejs';
+const MAX_BODY_BYTES = 10_000;
 
-function sanitizeForDiscord(text: string, maxLength: number): string {
-  let sanitized = text.replace(/[\x00-\x08\x0B-\x0C\x0E-\x1F\x7F]/g, '');
-  
-  if (sanitized.length > maxLength) {
-    sanitized = sanitized.substring(0, maxLength - 3) + '...';
-  }
-  
-  return sanitized;
+const isRateLimited = createRateLimiter(5, 60_000);
+
+function clientKey(request: NextRequest): string {
+  return request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || request.headers.get("x-real-ip") || "unknown";
 }
 
-function isValidWebhookUrl(url: string): boolean {
+function isSameOrigin(request: NextRequest): boolean {
+  const origin = request.headers.get("origin");
+  if (!origin) return true;
   try {
-    const urlObj = new URL(url);
-    return urlObj.protocol === 'https:' && 
-           urlObj.hostname === 'discord.com' && 
-           urlObj.pathname.startsWith('/api/webhooks/');
+    return new URL(origin).host === request.headers.get("host");
   } catch {
     return false;
   }
 }
 
+function errorResponse(error: string, status: number) {
+  return NextResponse.json({ error }, { status });
+}
+
 export async function POST(request: NextRequest) {
   try {
-    const contentType = request.headers.get('content-type');
-    if (!contentType || !contentType.includes('application/json')) {
-      return NextResponse.json(
-        { error: "Invalid content type" },
-        { status: 400 }
-      );
+    if (!isSameOrigin(request)) {
+      return errorResponse("Forbidden", 403);
     }
 
-    let body;
+    if (isRateLimited(clientKey(request))) {
+      return errorResponse("Too many submissions. Please wait a minute and try again.", 429);
+    }
+
+    if (!request.headers.get("content-type")?.includes("application/json")) {
+      return errorResponse("Invalid content type", 400);
+    }
+
+    if (Number(request.headers.get("content-length")) > MAX_BODY_BYTES) {
+      return errorResponse("Request is too large", 413);
+    }
+
+    const raw = await request.text();
+    if (raw.length > MAX_BODY_BYTES) {
+      return errorResponse("Request is too large", 413);
+    }
+
+    let body: unknown;
     try {
-      body = await request.json();
+      body = JSON.parse(raw);
     } catch {
-      return NextResponse.json(
-        { error: "Invalid JSON" },
-        { status: 400 }
-      );
+      return errorResponse("Invalid JSON", 400);
     }
 
-    const { title, description, category, device, platform } = body;
+    if (typeof body !== "object" || body === null) {
+      return errorResponse("Invalid request body", 400);
+    }
+
+    const { title, description, category, device, platform } = body as Record<string, unknown>;
 
     if (!title || !description || !category || !platform) {
-      return NextResponse.json(
-        { error: "Missing required fields" },
-        { status: 400 }
-      );
+      return errorResponse("Missing required fields", 400);
     }
 
-    if (typeof title !== 'string' || typeof description !== 'string' || typeof category !== 'string' || typeof platform !== 'string') {
-      return NextResponse.json(
-        { error: "Invalid field types" },
-        { status: 400 }
-      );
+    if (
+      typeof title !== "string" ||
+      typeof description !== "string" ||
+      typeof category !== "string" ||
+      typeof platform !== "string"
+    ) {
+      return errorResponse("Invalid field types", 400);
     }
 
-    if (device !== undefined && device !== null && typeof device !== 'string') {
-      return NextResponse.json(
-        { error: "Invalid device field type" },
-        { status: 400 }
-      );
+    if (device !== undefined && device !== null && typeof device !== "string") {
+      return errorResponse("Invalid device field type", 400);
     }
 
     const sanitizedTitle = sanitizeForDiscord(title.trim(), 256);
-    if (sanitizedTitle.length === 0 || sanitizedTitle.length > 200) {
-      return NextResponse.json(
-        { error: "Title must be between 1 and 200 characters" },
-        { status: 400 }
-      );
+    if (isBlank(sanitizedTitle) || sanitizedTitle.length > TITLE_MAX) {
+      return errorResponse(`Title must be between 1 and ${TITLE_MAX} characters`, 400);
     }
 
-    const sanitizedDescription = sanitizeForDiscord(description.trim(), 1800);
-    if (sanitizedDescription.length === 0) {
-      return NextResponse.json(
-        { error: "Description is required" },
-        { status: 400 }
-      );
-    }
-    if (sanitizedDescription.length > 1800) {
-      return NextResponse.json(
-        { error: "Description must be less than 1800 characters" },
-        { status: 400 }
-      );
+    if (description.trim().length > DESCRIPTION_MAX) {
+      return errorResponse(`Description must be ${DESCRIPTION_MAX} characters or fewer`, 400);
     }
 
-    const validCategories = ["Bug Report", "Feature Request", "General Feedback"];
-    if (!validCategories.includes(category)) {
-      return NextResponse.json(
-        { error: "Invalid category" },
-        { status: 400 }
-      );
+    const sanitizedDescription = sanitizeForDiscord(description.trim(), DESCRIPTION_MAX);
+    if (isBlank(sanitizedDescription)) {
+      return errorResponse("Description is required", 400);
     }
 
-    const validPlatforms = ["app", "web", "both"];
-    if (!validPlatforms.includes(platform)) {
-      return NextResponse.json(
-        { error: "Invalid platform" },
-        { status: 400 }
-      );
+    if (!isFeedbackCategory(category)) {
+      return errorResponse("Invalid category", 400);
+    }
+
+    if (!isFeedbackPlatform(platform)) {
+      return errorResponse("Invalid platform", 400);
     }
 
     const webhookUrl = process.env.DISCORD_WEBHOOK_URL;
-
-    if (!webhookUrl) {
-      return NextResponse.json(
-        { error: "Service temporarily unavailable" },
-        { status: 503 }
-      );
+    if (!webhookUrl || !isValidWebhookUrl(webhookUrl)) {
+      return errorResponse("Service temporarily unavailable", 503);
     }
 
-    if (!isValidWebhookUrl(webhookUrl)) {
-      return NextResponse.json(
-        { error: "Service temporarily unavailable" },
-        { status: 503 }
-      );
-    }
-
-    let sanitizedDevice = "";
-    if (device && typeof device === 'string') {
-      sanitizedDevice = sanitizeForDiscord(device.trim(), 100);
-    }
-
-    const embedFields: any[] = [
-      {
-        name: "Category",
-        value: category,
-        inline: true,
-      },
-      {
-        name: "Which platform?",
-        value: platform === "app" ? "App" : platform === "web" ? "Web" : "Both",
-        inline: true,
-      },
-      {
-        name: "Title",
-        value: sanitizedTitle,
-        inline: false,
-      },
-    ];
-
-    if (category === "Bug Report" && sanitizedDevice) {
-      embedFields.push({
-        name: "Device",
-        value: sanitizedDevice,
-        inline: true,
-      });
-    }
-
-    let embedDescription = "";
-    let descriptionField = null;
-
-    if (sanitizedDescription.length <= 1024) {
-      descriptionField = {
-        name: "Description",
-        value: sanitizedDescription,
-        inline: false,
-      };
-    } else {
-      embedDescription = sanitizedDescription.length > 4096 
-        ? sanitizedDescription.substring(0, 4093) + '...' 
-        : sanitizedDescription;
-    }
-
-    if (descriptionField) {
-      embedFields.push(descriptionField);
-    }
-
-    let embedColor: number;
-    if (category === "Bug Report") {
-      embedColor = 16731983;
-    } else if (category === "Feature Request") {
-      embedColor = 14067215;
-    } else {
-      embedColor = 6331898;
-    }
-
-    const embed: any = {
-      title: "New Feedback Submission",
-      color: embedColor,
-      fields: embedFields,
-      timestamp: new Date().toISOString(),
-      footer: {
-        text: "X&O Battle Feedback",
-      },
-    };
-
-    if (embedDescription) {
-      embed.description = embedDescription;
-    }
+    const embed = buildFeedbackEmbed({
+      category,
+      platform,
+      title: sanitizedTitle,
+      description: sanitizedDescription,
+      device: typeof device === "string" && !isBlank(device) ? sanitizeForDiscord(device.trim(), DEVICE_MAX) : "",
+    });
 
     try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 10000);
-
-      const discordResponse = await fetch(webhookUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "User-Agent": "XOBattle-Feedback/1.0",
-        },
-        body: JSON.stringify({
-          embeds: [embed],
-        }),
-        signal: controller.signal,
-      });
-
-      clearTimeout(timeoutId);
+      const discordResponse = await sendEmbed(webhookUrl, embed);
 
       if (!discordResponse.ok) {
-        return NextResponse.json(
-          { error: "Failed to submit feedback. Please try again later." },
-          { status: 500 }
-        );
+        return errorResponse("Failed to submit feedback. Please try again later.", 500);
       }
 
-      return NextResponse.json(
-        { message: "Feedback submitted successfully" },
-        { 
-          status: 200,
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-      );
+      return NextResponse.json({ message: "Feedback submitted successfully" });
     } catch (fetchError) {
-      if (fetchError instanceof Error && fetchError.name === 'AbortError') {
-        return NextResponse.json(
-          { error: "Request timeout. Please try again later." },
-          { status: 504 }
-        );
+      if (fetchError instanceof Error && (fetchError.name === "TimeoutError" || fetchError.name === "AbortError")) {
+        return errorResponse("Request timeout. Please try again later.", 504);
       }
-      return NextResponse.json(
-        { error: "Failed to submit feedback. Please try again later." },
-        { status: 500 }
-      );
+      return errorResponse("Failed to submit feedback. Please try again later.", 500);
     }
-  } catch (error) {
-    return NextResponse.json(
-      { error: "An error occurred. Please try again later." },
-      { 
-        status: 500,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-    );
+  } catch {
+    return errorResponse("An error occurred. Please try again later.", 500);
   }
 }

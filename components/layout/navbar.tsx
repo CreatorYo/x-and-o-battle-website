@@ -1,270 +1,147 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import Link from "next/link"
-import Image from "next/image"
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { Menu, X, Mail } from "lucide-react"
-import { MobileThemeSwitcher } from "@/components/mobile-theme-switcher"
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { Menu, X } from "lucide-react";
+import { AppleIcon } from "@/components/brand-icons";
+import { MobileMenu } from "@/components/layout/mobile-menu";
+import { ScrollEdge, isNavTone, type NavTone } from "@/components/layout/scroll-edge";
+import { APP_STORE_URL, LOGO_URL, NAV_LINKS } from "@/lib/links";
 
-const BANNER_CONFIG = {
-  enabled: false,
-  storageKey: "v2-feedback-banner-dismissed",
-  content: {
-    message: "We're working on version 2 with new features! We'd love to hear your feedback on how we can improve.",
-    link: "mailto:help@creatoryogames.com",
-  },
-  style: {
-    backgroundColor: "#094085",
-    textColor: "#ffffff",
-  },
-}
+const NAV_CENTRE_Y = 28;
 
 export function Navbar() {
-  const [isScrolled, setIsScrolled] = useState(false)
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const [isBannerVisible, setIsBannerVisible] = useState(false)
-  const [isBannerAnimated, setIsBannerAnimated] = useState(false)
-  const [isClient, setIsClient] = useState(false)
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [surfaceTone, setSurfaceTone] = useState<NavTone>();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
-    setIsClient(true)
-    if (BANNER_CONFIG.enabled) {
-      const dismissed = localStorage.getItem(BANNER_CONFIG.storageKey)
-      if (dismissed !== "true") {
-        setIsBannerVisible(true)
-        setTimeout(() => setIsBannerAnimated(true), 100)
-      }
-    }
-  }, [])
+    const surfaces = [...document.querySelectorAll<HTMLElement>("[data-nav-tone]")];
+    let frame = 0;
+
+    const update = () => {
+      frame = 0;
+      setIsScrolled(window.scrollY > 8);
+      const surface = surfaces.find((el) => {
+        const { top, bottom } = el.getBoundingClientRect();
+        return top <= NAV_CENTRE_Y && bottom > NAV_CENTRE_Y;
+      });
+      const value = surface?.dataset.navTone;
+      setSurfaceTone(isNavTone(value) ? value : undefined);
+    };
+
+    const schedule = () => {
+      if (!frame) frame = requestAnimationFrame(update);
+    };
+
+    schedule();
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
+    };
+  }, []);
 
   useEffect(() => {
-    let lastScrollY = window.scrollY
-    const threshold = 10
+    if (!isMobileMenuOpen) return;
 
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY
-      if (Math.abs(currentScrollY - lastScrollY) > threshold && !isMobileMenuOpen) {
-        setIsScrolled(currentScrollY > lastScrollY && currentScrollY > 50)
-        lastScrollY = currentScrollY
-      }
-    }
+    const { body } = document;
+    const desktop = window.matchMedia("(min-width: 768px)");
+    const close = () => setIsMobileMenuOpen(false);
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") close();
+    };
+    const onBreakpoint = (e: MediaQueryListEvent) => {
+      if (e.matches) close();
+    };
 
-    const handleEsc = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        setIsMobileMenuOpen(false)
-      }
-    }
-
-    window.addEventListener("scroll", handleScroll, { passive: true })
-    document.addEventListener("keydown", handleEsc)
-
-    if (isMobileMenuOpen) {
-      document.body.style.overflow = "hidden"
-    } else {
-      document.body.style.overflow = ""
-    }
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+    body.style.setProperty("--removed-body-scroll-bar-size", `${scrollbarWidth}px`);
+    body.style.overflow = "hidden";
+    document.addEventListener("keydown", onKeyDown);
+    desktop.addEventListener("change", onBreakpoint);
 
     return () => {
-      window.removeEventListener("scroll", handleScroll)
-      document.removeEventListener("keydown", handleEsc)
-      document.body.style.overflow = ""
-    }
-  }, [isMobileMenuOpen])
+      body.style.removeProperty("--removed-body-scroll-bar-size");
+      body.style.overflow = "";
+      document.removeEventListener("keydown", onKeyDown);
+      desktop.removeEventListener("change", onBreakpoint);
+    };
+  }, [isMobileMenuOpen]);
 
-  const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen)
-    setIsScrolled(false)
-  }
-
-  const closeBanner = () => {
-    setIsBannerAnimated(false)
-    setTimeout(() => setIsBannerVisible(false), 300)
-    if (isClient) {
-      localStorage.setItem(BANNER_CONFIG.storageKey, "true")
-    }
-  }
-
-  const handleBannerClick = () => {
-    if (BANNER_CONFIG.content.link) {
-      window.location.href = BANNER_CONFIG.content.link
-    }
-  }
-
-  const navLinks = [
-    { name: "Home", href: "/" },
-    { name: "Features", href: "/#features" },
-    { name: "Screenshots", href: "/#screenshots" },
-  ]
-
-  const showBanner = isClient && isBannerVisible && BANNER_CONFIG.enabled
+  const closeMenu = () => setIsMobileMenuOpen(false);
+  const tone = isMobileMenuOpen ? undefined : surfaceTone;
 
   return (
     <>
-      {showBanner && (
-        <div
-          className={cn(
-            "fixed top-0 left-0 right-0 z-[50] shadow-sm transition-all duration-300",
-            isBannerAnimated ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4"
-          )}
-          style={{
-            backgroundColor: BANNER_CONFIG.style.backgroundColor,
-            color: BANNER_CONFIG.style.textColor,
-          }}
-        >
-          <div className="container mx-auto px-3 sm:px-4">
-            <div className="flex items-center justify-between py-3 md:py-2.5 min-h-[60px] md:min-h-[48px]">
-              <div
-                className={cn(
-                  "flex-1 text-center px-1 sm:px-3 md:px-6",
-                  BANNER_CONFIG.content.link && "cursor-pointer hover:opacity-90 transition-opacity",
-                )}
-                onClick={BANNER_CONFIG.content.link ? handleBannerClick : undefined}
-              >
-                <div className="block sm:hidden">
-                  <div className="text-xs leading-tight opacity-95">
-                    {BANNER_CONFIG.content.message}
-                    {BANNER_CONFIG.content.link && <span className="ml-1">→</span>}
-                  </div>
-                </div>
-
-                <div className="hidden sm:flex sm:items-center sm:justify-center sm:gap-2">
-                  <span className="text-sm md:text-base leading-tight opacity-95">{BANNER_CONFIG.content.message}</span>
-                  {BANNER_CONFIG.content.link && <span className="text-sm md:text-base">→</span>}
-                </div>
-              </div>
-
-              <button
-                onClick={closeBanner}
-                className="flex-shrink-0 p-2 md:p-1.5 hover:bg-white/20 rounded-full transition-colors ml-2 group"
-                title="Dismiss"
-                aria-label="Dismiss"
-                style={{ color: BANNER_CONFIG.style.textColor }}
-              >
-                <X className="h-4 w-4 group-hover:scale-110 transition-transform" />
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
       <header
-        className={cn(
-          "fixed left-0 right-0 z-[40] transition-all duration-500 bg-background/70 backdrop-blur-sm navigation-bar-backdrop-filter",
-          showBanner ? "top-[60px] md:top-[48px]" : "top-0",
-          isScrolled ? "shadow-sm" : "",
-        )}
+        data-tone={tone}
+        className="group/nav fixed left-0 right-[var(--removed-body-scroll-bar-size,0px)] top-0 z-40"
       >
-        <div className="container mx-auto px-4 pt-1">
-          <div className="flex items-center justify-between h-12 md:h-14">
-            <Link href="/" className="flex items-center space-x-2.5 select-none">
-              <div className="relative w-8 h-8 overflow-hidden rounded-full">
+        <ScrollEdge visible={isScrolled && !isMobileMenuOpen} tone={tone} />
+
+        <div className="shell relative pt-1">
+          <div className="flex h-12 items-center justify-between gap-6 md:grid md:h-14 md:grid-cols-[1fr_auto_1fr]">
+            <Link
+              href="/"
+              onClick={closeMenu}
+              className="flex select-none items-center gap-2.5 justify-self-start rounded-lg focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              <span className="relative size-7 overflow-hidden rounded-[7px] transition-[filter] duration-300 group-data-[tone=brand]/nav:brightness-0">
                 <Image
-                  src="https://assets.creatoryogames.com/xobattle-assets/XO_Battle_Logo_Transparent.png"
-                  alt="X&O Battle Logo"
+                  src={LOGO_URL}
+                  alt=""
                   fill
-                  priority
-                  sizes="32px"
+                  loading="eager"
+                  sizes="28px"
                   draggable="false"
-                  className="object-cover pointer-events-none"
+                  className="pointer-events-none object-cover"
                 />
-              </div>
-              <span className="font-semibold text-lg">X&O Battle</span>
+              </span>
+              <span className="font-display text-[17px] font-bold tracking-[-0.015em] transition-colors duration-300 group-data-[tone=brand]/nav:text-white">
+                X&O Battle
+              </span>
             </Link>
 
-            <nav className="hidden md:flex items-center justify-center flex-1 space-x-8">
-              {navLinks.map((link) => (
+            <nav aria-label="Main" className="hidden items-center gap-8 md:flex">
+              {NAV_LINKS.map((link) => (
                 <Link
                   key={link.name}
                   href={link.href}
-                  className="select-none text-sm font-medium text-foreground/80 hover:text-foreground transition-colors"
+                  className="select-none text-[14px] font-medium text-muted-foreground transition-colors duration-300 hover:text-foreground group-data-[tone=brand]/nav:text-white/75 group-data-[tone=brand]/nav:hover:text-white"
                 >
                   {link.name}
                 </Link>
               ))}
             </nav>
 
-            <div className="hidden md:flex items-center">
-              <Link
-                href="https://apps.apple.com/us/app/x-o-battle/id6745736399"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="select-none"
-              >
-                <Button className="rounded-full bg-black dark:bg-white text-white dark:text-black hover:bg-black/90 dark:hover:bg-white/90">
-                  <Image src="/svgs/apple-logo.svg" alt="Apple" width={16} height={16} className="mr-2 h-4 w-4 brightness-0 invert dark:invert-0" />
-                  Download
-                </Button>
-              </Link>
-            </div>
+            <a
+              href={APP_STORE_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="shine hidden h-9 select-none items-center gap-2 justify-self-end rounded-full bg-primary px-4 text-[14px] font-semibold text-primary-foreground transition-[filter,background-color,color] duration-300 hover:brightness-110 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background md:inline-flex group-data-[tone=brand]/nav:bg-white group-data-[tone=brand]/nav:text-brand-band"
+            >
+              <AppleIcon className="-mt-0.5 h-[15px] w-auto" />
+              Download
+            </a>
 
             <button
-              className="md:hidden p-2 hover:bg-secondary rounded-full transition-colors select-none"
-              onClick={toggleMobileMenu}
-              aria-label="Toggle menu"
-              title="Toggle menu"
+              type="button"
+              className="rounded-full p-2 transition-colors duration-300 hover:bg-secondary focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring md:hidden group-data-[tone=brand]/nav:text-white group-data-[tone=brand]/nav:hover:bg-white/15"
+              onClick={() => setIsMobileMenuOpen((open) => !open)}
+              aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
+              aria-expanded={isMobileMenuOpen}
             >
-              {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+              {isMobileMenuOpen ? <X className="size-6" /> : <Menu className="size-6" />}
             </button>
           </div>
         </div>
       </header>
 
-      <div
-        className={cn(
-          "fixed inset-0 z-[30] bg-background/70 backdrop-blur-xl transition-transform duration-500 md:hidden",
-          isMobileMenuOpen ? "translate-y-0" : "-translate-y-full",
-        )}
-        style={{
-          paddingTop: showBanner ? "60px" : "0px",
-        }}
-      >
-        <div className="h-full pt-20 overflow-auto flex flex-col">
-          <div className="container mx-auto px-4 flex-1">
-            <div className="space-y-6">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.name}
-                  href={link.href}
-                  className="mobile-nav-link text-2xl font-medium hover:text-primary transition-colors select-none block"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  {link.name}
-                </Link>
-              ))}
-            </div>
-            <div className="mt-8">
-              <Link
-                href="https://apps.apple.com/us/app/x-o-battle/id6745736399"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="select-none"
-              >
-                <Button className="w-full rounded-full bg-black dark:bg-white text-white dark:text-black hover:bg-black/90 dark:hover:bg-white/90 h-12 text-base">
-                  <Image src="/svgs/apple-logo.svg" alt="Apple" width={20} height={20} className="mr-2 h-5 w-5 brightness-0 invert dark:invert-0" />
-                  Download
-                </Button>
-              </Link>
-            </div>
-          </div>
-
-          <div className="container mx-auto px-4 py-8 mt-auto border-t border-border/10">
-            <div className="flex items-center justify-between">
-              <div className="relative">
-                <MobileThemeSwitcher />
-              </div>
-              <a
-                title="Email Support"
-                href="mailto:help@creatoryogames.com"
-                className="select-none text-foreground/60 hover:text-foreground transition-colors"
-              >
-                <Mail className="h-5 w-5" />
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
+      <MobileMenu open={isMobileMenuOpen} onNavigate={closeMenu} />
     </>
   );
 }
